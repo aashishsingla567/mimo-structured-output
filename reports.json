@@ -469,6 +469,32 @@
           "attempts": 1
         }
       ]
+    },
+    {
+      "id": "20260606_180022",
+      "commit": "d645445",
+      "date": "2026-06-06T18:00:22.603797+00:00",
+      "suite": "sanity",
+      "summary": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "accuracy_pct": 100.0,
+        "wall_time_s": 4.29,
+        "total_input_tokens": 962,
+        "total_output_tokens": 348,
+        "avg_attempts": 1.0
+      },
+      "tests": [
+        {
+          "name": "tests/sanity/test_receipt.py::test_receipt_extraction",
+          "status": "passed",
+          "time_s": 4.29,
+          "input_tokens": 962,
+          "output_tokens": 348,
+          "attempts": 1
+        }
+      ]
     }
   ]
 }

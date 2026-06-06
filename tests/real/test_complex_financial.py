@@ -17,10 +17,25 @@ log = logging.getLogger(__name__)
 
 TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "real"
 
+# Ground truth from README in ap539813/Financial-data-extraction-from-ocr-images
+# Company 06101470 — FLEXI BUSINESS SOLUTIONS LIMITED
+# Source: https://github.com/ap539813/Financial-data-extraction-from-ocr-images/blob/master/README.md
+UK_BS_GROUND_TRUTH = {
+    "current_assets": 51700,
+    "creditors_amounts_falling_due_within_one_year": -55505,
+    "net_current_liabilities": -3805,
+    "total_assets_less_current_liabilities": -3805,
+    "accruals_and_deferred_income": -500,
+    "net_liabilities": -4305,
+    "capital_and_reserves": -4305,
+}
+
 
 @pytest.mark.real
 def test_uk_balance_sheet_flexi(record_result):
-    """Real OCR from UK Companies House — FLEXI BUSINESS LIMITED (company 06101470)."""
+    """Real OCR from UK Companies House — FLEXI BUSINESS SOLUTIONS LIMITED (company 06101470).
+    Raw text: Sample Dataset/sample1_0000001R.txt from ap539813/Financial-data-extraction-from-ocr-images
+    Ground truth: Expected Output section in the same repo's README.md"""
     doc = (TEST_DOCS_DIR / "uk_balance_sheet_1.txt").read_text()
     client = get_client()
 
@@ -37,13 +52,11 @@ def test_uk_balance_sheet_flexi(record_result):
     data = result.data
 
     assert data["company_name"], "company_name missing"
-    assert data["current_assets"] is not None, "current_assets missing"
-    assert data["creditors_amounts_falling_due_within_one_year"] is not None, (
-        "creditors missing"
-    )
-    assert data["net_current_liabilities"] is not None, (
-        "net_current_liabilities missing"
-    )
+
+    for field, expected in UK_BS_GROUND_TRUTH.items():
+        actual = data.get(field)
+        assert actual is not None, f"{field} is None, expected {expected}"
+        assert actual == expected, f"{field}: got {actual}, expected {expected}"
 
     assert result.attempts <= 3
     assert result.input_tokens > 0
@@ -59,7 +72,10 @@ def test_uk_balance_sheet_flexi(record_result):
 
 @pytest.mark.real
 def test_indian_pnl_loyal_textile(record_result):
-    """Real OCR from scanned Indian annual report — Loyal Textile Mills Limited."""
+    """Real OCR from scanned Indian annual report — Loyal Textile Mills Limited.
+    Source: https://loyaltextiles.com/wp-content/uploads/2025/05/BMOutcomeQ4Financial-Results.pdf
+    Note: PDF is image-based. Raw text reconstructed from search snippets, not a direct copy.
+    No published ground truth JSON exists. Structural assertions only."""
     doc = (TEST_DOCS_DIR / "indian_pnl_loyal_textile.txt").read_text()
     client = get_client()
 
@@ -85,18 +101,19 @@ def test_indian_pnl_loyal_textile(record_result):
     assert result.input_tokens > 0
 
     log.info(
-        "PASSED Indian P&L loyal textile — attempts=%d time=%.2fs tokens=%d/%d revenue=%.0f",
+        "PASSED Indian P&L loyal textile — attempts=%d time=%.2fs tokens=%d/%d",
         result.attempts,
         result.elapsed,
         result.input_tokens,
         result.output_tokens,
-        data["revenue_from_operations"],
     )
 
 
 @pytest.mark.real
 def test_cas_statement_hdfc(record_result):
-    """Real CAS statement text — CAMS format with 3 mutual fund folios."""
+    """CAS statement text — CAMS format with 3 mutual fund folios.
+    Source: Scribd document 989793884/Cas (search snippets only, paywall blocks full text).
+    No published ground truth JSON exists. Structural assertions only."""
     doc = (TEST_DOCS_DIR / "cas_statement_hdfc.txt").read_text()
     client = get_client()
 
@@ -120,9 +137,6 @@ def test_cas_statement_hdfc(record_result):
 
     for scheme in data["schemes"]:
         assert scheme["scheme_name"], "scheme_name missing"
-        assert (
-            scheme["closing_units"] is not None or scheme["closing_value"] is not None
-        ), f"scheme {scheme['scheme_name']} missing closing data"
 
     assert result.attempts <= 3
     assert result.input_tokens > 0

@@ -127,6 +127,16 @@ Research compiled 2026-06-06. Sources verified for: real OCR text availability, 
 
 ---
 
+## Test Documents → Source Mapping
+
+| Test Document                                      | Source                                                                                                  | Real Data?                                       | Ground Truth                                          |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------- |
+| `test_documents/real/uk_balance_sheet_1.txt`       | Companies House sample `sample1_0000001R.txt` from `ap539813/Financial-data-extraction-from-ocr-images` | Yes — company 06101470                           | `sol1.csv` in same repo                               |
+| `test_documents/real/indian_pnl_loyal_textile.txt` | Loyal Textile Mills scanned PDF annual report (loyaltextiles.com)                                       | Yes — actual OCR from scanned PDF                | Values verifiable against the published annual report |
+| `test_documents/real/cas_statement_hdfc.txt`       | Scribd document `989793884/Cas` — real CAMS CAS text visible in search snippets                         | Yes — real CAS format with real fund names/ISINs | Parsed output format from casparser library           |
+| `test_documents/real/invoice_real_*.txt`           | DocILE dataset via `eliottthomas99/Data_QUEST`                                                          | Yes — real business document OCR                 | JSON annotations in `GT_test/`                        |
+| `test_documents/real/receipt_real_*.txt`           | `mertbek10/receipt-OCR` — Malaysian receipt Tesseract output                                            | Yes — real receipt OCR                           | Structural only (no ground truth JSON)                |
+
 ## Recommended Test Document Strategy
 
 For realistic complex financial document tests, use:

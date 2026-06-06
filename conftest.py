@@ -28,19 +28,15 @@ def _is_reports_json_dirty():
 
 def pytest_configure(config):
     """Block test runs if reports.json has uncommitted changes."""
-    # Only enforce the guard when --report is passed
-    if "--report" in (config.option.markexpr or "") or getattr(
-        config.option, "report", False
-    ):
-        if _is_reports_json_dirty():
-            pytest.exit(
-                "\n\nreports.json has uncommitted changes.\n"
-                "Commit or discard them before running tests:\n\n"
-                "  git add reports.json && git commit -m 'Update test report'\n"
-                "  # or\n"
-                "  git checkout -- reports.json\n",
-                returncode=1,
-            )
+    if _is_reports_json_dirty():
+        pytest.exit(
+            "\n\nreports.json has uncommitted changes.\n"
+            "Commit or discard them before running tests:\n\n"
+            "  git add reports.json && git commit -m 'Update test report'\n"
+            "  # or\n"
+            "  git checkout -- reports.json\n",
+            returncode=1,
+        )
 
 
 def pytest_addoption(parser):
@@ -55,7 +51,7 @@ def pytest_addoption(parser):
         "--report",
         action="store_true",
         default=False,
-        help="Write test run stats to reports.json",
+        help="(deprecated) Reports are now always written",
     )
 
 
@@ -103,8 +99,6 @@ def pytest_runtest_makereport(item, call):
 
 
 def pytest_sessionfinish(session, exitstatus):
-    if not session.config.getoption("--report"):
-        return
 
     suite = session.config.getoption("--suite")
     run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")

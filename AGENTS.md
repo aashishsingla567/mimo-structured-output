@@ -7,9 +7,9 @@ Extracts structured JSON from OCR text using LLM tool-call forced output + Pydan
 ```bash
 uv sync                              # install deps
 uv run pytest --suite=sanity         # 14 hand-crafted tests (fast, default)
-uv run pytest --suite=real           # 10 real OCR tests
-uv run pytest --suite=full           # 24 tests total
-uv run pytest --suite=full --report  # run + write reports.json (guard: must be committed first)
+uv run pytest --suite=real           # 13 real OCR tests (receipts, invoices, financial docs)
+uv run pytest --suite=full           # 27 tests total
+uv run pytest --suite=full           # run + always write reports.json (guard: must be committed first)
 uv run python commit_report.py       # commit reports.json with summary message
 ```
 
@@ -27,9 +27,13 @@ Single test: `uv run pytest tests/sanity/test_receipt.py::test_receipt_extractio
 ## Structure
 
 - `extraction.py` — `extract_structured()`, `ExtractionConfig`, `ExtractionResult`, `_coerce_nested_json_strings()`
-- `schemas/` — one Pydantic model per document type (8 total)
+- `schemas/` — one Pydantic model per document type (11 total)
+  - Receipt, Invoice, Simple Invoice, Business Card, Prescription, Bank Statement, Purchase Order, Shipping Label
+  - `uk_balance_sheet.py` — UK Companies House balance sheets
+  - `indian_pnl.py` — Indian multi-column P&L statements
+  - `cas_statement.py` — CAMS/KFintech mutual fund CAS statements
 - `tests/sanity/` — hand-crafted OCR, exact value assertions
-- `tests/real/` — real OCR from [mertbek10/receipt-OCR](https://github.com/mertbek10/receipt-OCR) and [DocILE](https://github.com/eliottthomas99/Data_QUEST), structural assertions only
+- `tests/real/` — real OCR from [mertbek10/receipt-OCR](https://github.com/mertbek10/receipt-OCR), [DocILE](https://github.com/eliottthomas99/Data_QUEST), [Companies House](https://github.com/ap539813/Financial-data-extraction-from-ocr-images), Loyal Textile Mills, and [Scribd CAS](https://www.scribd.com/document/989793884/Cas); structural assertions only
 - `test_documents/sanity/` and `test_documents/real/` — OCR text inputs
 - `conftest.py` — `--suite`/`--report` flags, `record_result` fixture, stats collection, reports.json guard
 - `commit_report.py` — commits reports.json with test summary in message
