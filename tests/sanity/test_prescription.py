@@ -1,24 +1,18 @@
-import logging
 from pathlib import Path
 
 import pytest
 
 from extraction import get_client, extract_structured
 from schemas.prescription import Prescription
+from tests.conftest import TEST_DOCS_SANITY
+import logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-7s | %(message)s",
-    datefmt="%H:%M:%S",
-)
 log = logging.getLogger(__name__)
-
-TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
 @pytest.mark.sanity
 def test_prescription_extraction(record_result):
-    doc = (TEST_DOCS_DIR / "prescription_ocr.txt").read_text()
+    doc = (TEST_DOCS_SANITY / "prescription_ocr.txt").read_text()
     client = get_client()
 
     result = extract_structured(
@@ -68,7 +62,7 @@ def test_prescription_extraction(record_result):
 @pytest.mark.sanity
 def test_prescription_messy_ocr(record_result):
     """Messy OCR: 4 meds must be extracted, typos like 'Omeprazloe' preserved."""
-    doc = (TEST_DOCS_DIR / "prescription_ocr_messy.txt").read_text()
+    doc = (TEST_DOCS_SANITY / "prescription_ocr_messy.txt").read_text()
     client = get_client()
 
     result = extract_structured(

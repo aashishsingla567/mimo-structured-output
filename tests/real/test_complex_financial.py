@@ -1,21 +1,13 @@
-import logging
-from pathlib import Path
-
 import pytest
 
 from extraction import get_client, extract_structured
 from schemas.uk_balance_sheet import UKBalanceSheet
 from schemas.indian_pnl import IndianPnL
 from schemas.cas_statement import CASStatement
+from tests.conftest import TEST_DOCS_REAL
+import logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-7s | %(message)s",
-    datefmt="%H:%M:%S",
-)
 log = logging.getLogger(__name__)
-
-TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "real"
 
 # Ground truth from README in ap539813/Financial-data-extraction-from-ocr-images
 # Company 06101470 — FLEXI BUSINESS SOLUTIONS LIMITED
@@ -36,7 +28,7 @@ def test_uk_balance_sheet_flexi(record_result):
     """Real OCR from UK Companies House — FLEXI BUSINESS SOLUTIONS LIMITED (company 06101470).
     Raw text: Sample Dataset/sample1_0000001R.txt from ap539813/Financial-data-extraction-from-ocr-images
     Ground truth: Expected Output section in the same repo's README.md"""
-    doc = (TEST_DOCS_DIR / "uk_balance_sheet_1.txt").read_text()
+    doc = (TEST_DOCS_REAL / "uk_balance_sheet_1.txt").read_text()
     client = get_client()
 
     result = extract_structured(
@@ -76,7 +68,7 @@ def test_indian_pnl_loyal_textile(record_result):
     Source: https://loyaltextiles.com/wp-content/uploads/2025/05/BMOutcomeQ4Financial-Results.pdf
     Note: PDF is image-based. Raw text reconstructed from search snippets, not a direct copy.
     No published ground truth JSON exists. Structural assertions only."""
-    doc = (TEST_DOCS_DIR / "indian_pnl_loyal_textile.txt").read_text()
+    doc = (TEST_DOCS_REAL / "indian_pnl_loyal_textile.txt").read_text()
     client = get_client()
 
     result = extract_structured(
@@ -114,7 +106,7 @@ def test_cas_statement_hdfc(record_result):
     """CAS statement text — CAMS format with 3 mutual fund folios.
     Source: Scribd document 989793884/Cas (search snippets only, paywall blocks full text).
     No published ground truth JSON exists. Structural assertions only."""
-    doc = (TEST_DOCS_DIR / "cas_statement_hdfc.txt").read_text()
+    doc = (TEST_DOCS_REAL / "cas_statement_hdfc.txt").read_text()
     client = get_client()
 
     result = extract_structured(

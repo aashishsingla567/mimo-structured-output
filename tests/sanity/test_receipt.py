@@ -1,24 +1,18 @@
-import logging
 from pathlib import Path
 
 import pytest
 
 from extraction import get_client, extract_structured
 from schemas.receipt import RestaurantReceipt
+from tests.conftest import TEST_DOCS_SANITY
+import logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-7s | %(message)s",
-    datefmt="%H:%M:%S",
-)
 log = logging.getLogger(__name__)
-
-TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
 @pytest.mark.sanity
 def test_receipt_extraction(record_result):
-    doc = (TEST_DOCS_DIR / "receipt_ocr.txt").read_text()
+    doc = (TEST_DOCS_SANITY / "receipt_ocr.txt").read_text()
     client = get_client()
 
     result = extract_structured(
@@ -62,7 +56,7 @@ def test_receipt_extraction(record_result):
 @pytest.mark.sanity
 def test_receipt_messy_ocr(record_result):
     """Messy OCR: structure must be correct, but OCR typos preserved as-is."""
-    doc = (TEST_DOCS_DIR / "receipt_ocr_messy.txt").read_text()
+    doc = (TEST_DOCS_SANITY / "receipt_ocr_messy.txt").read_text()
     client = get_client()
 
     result = extract_structured(

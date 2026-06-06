@@ -1,27 +1,19 @@
-import os
 import time
 import json
 import logging
 from dataclasses import dataclass, field
 from typing import Any, TypeVar
 
-from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 
 from utils import (
-    DEFAULT_BASE_URL,
-    DEFAULT_MODEL,
-    ENV_API_KEY,
-    ENV_BASE_URL,
-    ENV_MODEL,
     MAX_ATTEMPTS,
     MAX_COMPLETION_TOKENS,
     TokenUsage,
+    env,
     merge_usages,
 )
-
-load_dotenv()
 
 log = logging.getLogger(__name__)
 
@@ -71,20 +63,18 @@ class ExtractionResult:
 class ExtractionConfig:
     """Tuneable knobs for the extraction pipeline."""
 
-    model: str = field(default_factory=lambda: os.environ.get(ENV_MODEL, DEFAULT_MODEL))
+    model: str = field(default_factory=lambda: env.MIMO_MODEL)
     max_attempts: int = MAX_ATTEMPTS
     max_completion_tokens: int = MAX_COMPLETION_TOKENS
     temperature: float = 0
     top_p: float = 1
-    base_url: str = field(
-        default_factory=lambda: os.environ.get(ENV_BASE_URL, DEFAULT_BASE_URL)
-    )
+    base_url: str = field(default_factory=lambda: env.MIMO_BASE_URL)
 
 
 def get_client(config: ExtractionConfig | None = None) -> OpenAI:
     """Create an OpenAI client from env vars."""
     cfg = config or ExtractionConfig()
-    client = OpenAI(base_url=cfg.base_url, api_key=os.environ[ENV_API_KEY])
+    client = OpenAI(base_url=cfg.base_url, api_key=env.MIMO_API_KEY)
     log.info("Client initialised (base_url=%s, model=%s)", cfg.base_url, cfg.model)
     return client
 

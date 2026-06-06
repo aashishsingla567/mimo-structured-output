@@ -1,20 +1,12 @@
-import logging
-from pathlib import Path
-
 import pytest
 
 from extraction import get_client, extract_structured
 from schemas.receipt import RestaurantReceipt
 from schemas.invoice import Invoice
+from tests.conftest import TEST_DOCS_REAL
+import logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-7s | %(message)s",
-    datefmt="%H:%M:%S",
-)
 log = logging.getLogger(__name__)
-
-TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "real"
 
 REAL_RECEIPT_FILES = [
     "receipt_real_1.txt",
@@ -37,7 +29,7 @@ REAL_INVOICE_FILES = [
 @pytest.mark.parametrize("receipt_file", REAL_RECEIPT_FILES)
 def test_real_receipt_extraction(receipt_file, record_result):
     """Real OCR receipts from Malaysian supermarkets (Tesseract output)."""
-    doc = (TEST_DOCS_DIR / receipt_file).read_text()
+    doc = (TEST_DOCS_REAL / receipt_file).read_text()
     client = get_client()
 
     result = extract_structured(
@@ -79,7 +71,7 @@ def test_real_receipt_extraction(receipt_file, record_result):
 @pytest.mark.parametrize("invoice_file", REAL_INVOICE_FILES)
 def test_real_invoice_extraction(invoice_file, record_result):
     """Real OCR invoices from DocILE (US business documents, DocTR output)."""
-    doc = (TEST_DOCS_DIR / invoice_file).read_text()
+    doc = (TEST_DOCS_REAL / invoice_file).read_text()
     client = get_client()
 
     result = extract_structured(

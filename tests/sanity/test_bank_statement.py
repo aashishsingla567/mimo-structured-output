@@ -1,24 +1,18 @@
-import logging
 from pathlib import Path
 
 import pytest
 
-from extraction import get_client, extract_structured, ExtractionConfig
+from extraction import get_client, extract_structured
 from schemas.bank_statement import BankStatement
+from tests.conftest import TEST_DOCS_SANITY
+import logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-7s | %(message)s",
-    datefmt="%H:%M:%S",
-)
 log = logging.getLogger(__name__)
-
-TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
 @pytest.mark.sanity
 def test_bank_statement_extraction(record_result):
-    doc = (TEST_DOCS_DIR / "bank_statement_ocr.txt").read_text()
+    doc = (TEST_DOCS_SANITY / "bank_statement_ocr.txt").read_text()
     client = get_client()
 
     result = extract_structured(
@@ -66,7 +60,7 @@ def test_bank_statement_extraction(record_result):
 @pytest.mark.sanity
 def test_bank_statement_messy_ocr(record_result):
     """Messy OCR: 8 txns extracted, typos like 'Balanoe' preserved as-is."""
-    doc = (TEST_DOCS_DIR / "bank_statement_ocr_messy.txt").read_text()
+    doc = (TEST_DOCS_SANITY / "bank_statement_ocr_messy.txt").read_text()
     client = get_client()
 
     result = extract_structured(

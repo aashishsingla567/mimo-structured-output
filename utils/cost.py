@@ -2,7 +2,8 @@
 
 import json
 
-from utils.constants import DEFAULT_MODEL, PRICING_FILE
+from utils.constants import PRICING_FILE
+from utils.env import env
 from utils.tokens import TokenUsage
 
 
@@ -14,12 +15,13 @@ def load_pricing() -> dict | None:
         return json.load(f)
 
 
-def calculate_cost(usage: TokenUsage, model: str = DEFAULT_MODEL) -> float | None:
+def calculate_cost(usage: TokenUsage, model: str | None = None) -> float | None:
     """Calculate cost in USD for given token counts.
 
     Splits prompt_tokens into cache-hit and cache-miss portions,
     each billed at their respective rates.
     """
+    model = model or env.MIMO_MODEL
     pricing = load_pricing()
     if not pricing or model not in pricing["models"]:
         return None

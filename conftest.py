@@ -6,12 +6,11 @@ from datetime import datetime, timezone
 import pytest
 
 from utils import (
-    DEFAULT_MODEL,
-    ENV_MODEL,
     REPORTS_FILE,
     REPO_ROOT,
     TokenUsage,
     calculate_cost,
+    env,
 )
 
 
@@ -42,9 +41,9 @@ def pytest_configure(config):
             "  git checkout -- reports.json\n",
             returncode=1,
         )
-    # Set model from --model option
+    # Override model from --model option
     model = config.getoption("--model")
-    os.environ[ENV_MODEL] = model
+    env.MIMO_MODEL = model
 
 
 def pytest_addoption(parser):
@@ -58,8 +57,8 @@ def pytest_addoption(parser):
     parser.addoption(
         "--model",
         action="store",
-        default=os.environ.get(ENV_MODEL, DEFAULT_MODEL),
-        help=f"Model to use for extraction (default: {ENV_MODEL} env or {DEFAULT_MODEL})",
+        default=env.MIMO_MODEL,
+        help=f"Model to use for extraction (default: {env.MIMO_MODEL})",
     )
     parser.addoption(
         "--report",
@@ -182,7 +181,7 @@ def pytest_sessionfinish(session, exitstatus):
         "commit": commit,
         "date": datetime.now(timezone.utc).isoformat(),
         "suite": suite,
-        "model": os.environ.get(ENV_MODEL, DEFAULT_MODEL),
+        "model": env.MIMO_MODEL,
         "summary": {
             "total": total,
             "passed": passed,
