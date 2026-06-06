@@ -74,8 +74,8 @@ def pytest_addoption(parser):
     parser.addoption(
         "--model",
         action="store",
-        default="mimo-v2.5",
-        help="Model to use for extraction (default: mimo-v2.5)",
+        default=os.environ.get("MIMO_MODEL", "mimo-v2.5"),
+        help="Model to use for extraction (default: MIMO_MODEL env or mimo-v2.5)",
     )
     parser.addoption(
         "--report",
