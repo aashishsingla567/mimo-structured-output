@@ -14,7 +14,6 @@ def _is_reports_json_dirty():
     if not REPORTS_FILE.exists():
         return False
     try:
-        # Check if file is untracked or modified relative to HEAD
         result = subprocess.run(
             ["git", "status", "--porcelain", "reports.json"],
             cwd=str(REPO_ROOT),
@@ -165,13 +164,7 @@ def pytest_sessionfinish(session, exitstatus):
         "tests": tests,
     }
 
-    if REPORTS_FILE.exists():
-        with open(REPORTS_FILE) as f:
-            reports = json.load(f)
-    else:
-        reports = {"runs": []}
-
-    reports["runs"].append(run_entry)
+    reports = {"runs": [run_entry]}
 
     with open(REPORTS_FILE, "w") as f:
         json.dump(reports, f, indent=2)

@@ -9,7 +9,7 @@ uv sync                              # install deps
 uv run pytest --suite=sanity         # 14 hand-crafted tests (fast, default)
 uv run pytest --suite=real           # 13 real OCR tests (receipts, invoices, financial docs)
 uv run pytest --suite=full           # 27 tests total
-uv run pytest --suite=full           # run + always write reports.json (guard: must be committed first)
+uv run pytest --suite=full           # run + write reports.json (guard: must be committed first)
 uv run python commit_report.py       # commit reports.json with summary message
 ```
 
