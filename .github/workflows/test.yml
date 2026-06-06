@@ -40,5 +40,5 @@ jobs:
           MIMO_MODEL: ${{ vars.MIMO_MODEL || 'mimo-v2.5' }}
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "ci: update reports.json"
+          commit_message: "ci: update reports.json [skip ci]"
           file_pattern: reports.json
