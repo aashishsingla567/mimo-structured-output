@@ -1,0 +1,61 @@
+CONSOLIDATED ACCOUNT STATEMENT (CAS)
+Statement Period: 01-Apr-2024 to 30-Sep-2024
+Statement Date: 15-Oct-2024
+CAMS (Computer Age Management Services Ltd.)
+
+INVESTOR INFORMATION
+PAN: ABCDE1234F
+Name: RAJESH KUMAR SHARMA
+Email: rajesh.sharma@example.com
+Address: 123, Sample Street, Apartment 4B, Bangalore, Karnataka - 560001, India
+
+FOLIO: 12345678/90 | Registrar: CAMS | Fund House: HDFC Mutual Fund
+Scheme: HDFC Equity Fund - Direct Plan - Growth
+ISIN: INF179K01234
+Opening Units (01-Apr-2024): 1,250.500
+Closing Units (30-Sep-2024): 1,380.750
+NAV as on 30-Sep-2024: 425.50
+Closing Value: 5,87,529.13
+
+Transactions:
+15-Apr-2024    Purchase    20,000.00    50.250    398.01    1,300.750
+15-May-2024    Purchase    21,500.00    50.000    430.00    1,350.750
+15-Jun-2024    Purchase    13,200.00    30.000    440.00    1,380.750
+
+FOLIO: 23456789/01 | Registrar: CAMS | Fund House: SBI Mutual Fund
+Scheme: SBI Bluechip Fund - Regular Plan - Growth
+ISIN: INF200K01234
+Opening Units (01-Apr-2024): 500.000
+Closing Units (30-Sep-2024): 500.000
+NAV as on 30-Sep-2024: 612.30
+Closing Value: 3,06,150.00
+
+Transactions:
+01-Apr-2024    Dividend Reinvestment    1,250.00    2.042    612.30    502.042
+
+FOLIO: 34567890/12 | Registrar: CAMS | Fund House: ICICI Prudential Mutual Fund
+Scheme: ICICI Prudential Technology Fund - Direct Plan - Growth
+ISIN: INF109K01234
+Opening Units (01-Apr-2024): 800.000
+Closing Units (30-Sep-2024): 800.000
+NAV as on 30-Sep-2024: 178.45
+Closing Value: 1,42,760.00
+
+Transactions:
+10-Jul-2024    Switch Out    30,000.00    168.23    178.30    631.770
+
+PORTFOLIO SUMMARY
+Mutual Funds - Equity: 10,36,439.13 (65.2%)
+Mutual Funds - Debt: 2,45,800.00 (15.5%)
+Mutual Funds - Hybrid: 3,07,610.00 (19.3%)
+Total Portfolio Value: 15,89,849.13
+
+COST VALUE SUMMARY (Mutual Funds)
+Total Invested Cost: 12,50,000.00
+Current Value: 15,89,849.13
+Gain/Loss: 3,39,849.13 (27.19%)
+
+1. This is a computer-generated statement and does not require a signature.
+2. The statement includes holdings across all mutual fund folios linked to your PAN.
+3. NAV is as of the statement date and may vary.
+4. For discrepancies, please contact CAMS at camsonline.com.

@@ -1,0 +1,30 @@
+LOYAL TEXTILE MILLS LIMITED
+Registered Office : 21/4 Mills Street, Kovilpatti 628 501
+CIN : L17111TN1946PLC001361
+STATEMENT OF AUDITED STANDALONE FINANCIAL RESULTS
+FOR THE YEAR ENDED 31st MARCH 2025
+
+(₹ in Lakhs)
+Particulars                                           Quarter Ended                                          Year Ended
+                                           31.03.2025    31.12.2024    31.03.2024    31.03.2025    31.03.2024
+                                           (Audited)     (Unaudited)   (Audited)     (Audited)     (Audited)
+
+1 Revenue from Operations                 14,572        15,507        20,076        68,215        93,919
+2 Other Income                              34            363           4,084         1,269         7,383
+3 Total Income (1+2)                     14,607        15,870        24,160        69,485       1,01,302
+
+4 Expenses:
+   a. Cost of materials consumed          7,092         7,804         9,055        32,246        52,448
+   b. Purchases of Stock in Trade           44            35           2,477         2,855         2,933
+   c. Changes in inventories of:
+      - Finished Goods                    (174)         1,717         2,444         8,010         3,010
+      - Work in progress                    710           437          (642)         1,162           652
+   d. Employee benefits expense           2,740         2,970         3,261        11,936        15,698
+   e. Finance Costs                       1,308         1,168         1,597         5,096         5,288
+   f. Depreciation & Amortisation           843           860           930         3,468         3,776
+   g. Other expenses                      5,634         4,401         5,590        19,797        23,433
+   Total Expenses (4)                    18,197        19,391        24,711        84,571      1,07,238
+
+5 Profit/(Loss) before exceptional item  (3,591)       (3,521)         (551)      (15,086)       (5,936)
+6 Exceptional Items                       6,366           NIL           NIL         6,786           NIL
+7 Profit/(Loss) before tax                2,775        (3,521)         (551)       (8,300)       (5,936)
