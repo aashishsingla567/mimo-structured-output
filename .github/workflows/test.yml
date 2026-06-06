@@ -7,19 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  sanity:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v4
-      - run: uv sync
-      - run: uv run pytest --suite=sanity -v
-        env:
-          MIMO_API_KEY: ${{ secrets.MIMO_API_KEY }}
-          MIMO_BASE_URL: ${{ secrets.MIMO_BASE_URL }}
-
-  full:
-    needs: sanity
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
