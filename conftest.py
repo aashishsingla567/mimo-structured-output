@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 REPORTS_FILE = Path(__file__).parent / "reports.json"
+PRICING_FILE = Path(__file__).parent / "model_pricing.json"
 REPO_ROOT = Path(__file__).parent
 
 
@@ -23,6 +24,26 @@ def _is_reports_json_dirty():
         return bool(result.stdout.strip())
     except Exception:
         return False
+
+
+def _load_pricing():
+    """Load model pricing from model_pricing.json."""
+    if not PRICING_FILE.exists():
+        return None
+    with open(PRICING_FILE) as f:
+        return json.load(f)
+
+
+def _calculate_cost(input_tokens, output_tokens, model="mimo-v2.5"):
+    """Calculate cost in USD for given token counts."""
+    pricing = _load_pricing()
+    if not pricing or model not in pricing["models"]:
+        return None
+    rates = pricing["models"][model]
+    # Use cache miss pricing for input (worst case)
+    input_cost = (input_tokens / 1_000_000) * rates["input_per_1m_cache_miss"]
+    output_cost = (output_tokens / 1_000_000) * rates["output_per_1m"]
+    return round(input_cost + output_cost, 6)
 
 
 def pytest_configure(config):
@@ -141,10 +162,14 @@ def pytest_sessionfinish(session, exitstatus):
             test_entry["input_tokens"] = info["input_tokens"]
             test_entry["output_tokens"] = info["output_tokens"]
             test_entry["attempts"] = info["attempts"]
+            test_entry["cost_usd"] = _calculate_cost(
+                info["input_tokens"], info["output_tokens"]
+            )
         tests.append(test_entry)
 
     accuracy_pct = round((passed / total * 100), 1) if total > 0 else 0.0
     avg_attempts = round(total_attempts / total, 2) if total > 0 else 0
+    total_cost = _calculate_cost(total_in, total_out)
 
     run_entry = {
         "id": run_id,
@@ -159,6 +184,7 @@ def pytest_sessionfinish(session, exitstatus):
             "wall_time_s": round(total_time, 2),
             "total_input_tokens": total_in,
             "total_output_tokens": total_out,
+            "total_cost_usd": total_cost,
             "avg_attempts": avg_attempts,
         },
         "tests": tests,

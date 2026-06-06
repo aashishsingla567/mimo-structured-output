@@ -74,6 +74,12 @@ def compare_runs(prev_run, curr_run):
             curr_s.get("total_output_tokens"),
             True,
         ),
+        (
+            "Cost (USD)",
+            prev_s.get("total_cost_usd"),
+            curr_s.get("total_cost_usd"),
+            True,
+        ),
         ("Avg attempts", prev_s.get("avg_attempts"), curr_s.get("avg_attempts"), True),
     ]
 
