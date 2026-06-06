@@ -1,26 +1,30 @@
 {
   "runs": [
     {
-      "id": "20260606_185603",
-      "commit": "74886ac",
-      "date": "2026-06-06T18:56:03.510437+00:00",
+      "id": "20260606_185623",
+      "commit": "a47cc85",
+      "date": "2026-06-06T18:56:23.421381+00:00",
       "suite": "sanity",
       "summary": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "accuracy_pct": 0.0,
-        "wall_time_s": 7.29,
-        "total_input_tokens": 0,
-        "total_output_tokens": 0,
-        "total_cost_usd": 0.0,
-        "avg_attempts": 0.0
+        "passed": 1,
+        "failed": 0,
+        "accuracy_pct": 100.0,
+        "wall_time_s": 4.51,
+        "total_input_tokens": 962,
+        "total_output_tokens": 348,
+        "total_cost_usd": 0.000232,
+        "avg_attempts": 1.0
       },
       "tests": [
         {
           "name": "tests/sanity/test_receipt.py::test_receipt_extraction",
-          "status": "failed",
-          "time_s": 7.29
+          "status": "passed",
+          "time_s": 4.51,
+          "input_tokens": 962,
+          "output_tokens": 348,
+          "attempts": 1,
+          "cost_usd": 0.000232
         }
       ]
     }
