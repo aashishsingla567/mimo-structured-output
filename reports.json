@@ -129,6 +129,136 @@
           "attempts": 1
         }
       ]
+    },
+    {
+      "id": "20260606_170826",
+      "commit": "bced562",
+      "date": "2026-06-06T17:08:26.528275+00:00",
+      "suite": "full",
+      "summary": {
+        "total": 14,
+        "passed": 14,
+        "failed": 0,
+        "accuracy_pct": 100.0,
+        "wall_time_s": 54.98,
+        "total_input_tokens": 14264,
+        "total_output_tokens": 4609,
+        "avg_attempts": 1.0
+      },
+      "tests": [
+        {
+          "name": "tests/sanity/test_bank_statement.py::test_bank_statement_extraction",
+          "status": "passed",
+          "time_s": 6.35,
+          "input_tokens": 1095,
+          "output_tokens": 573,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_bank_statement.py::test_bank_statement_messy_ocr",
+          "status": "passed",
+          "time_s": 6.44,
+          "input_tokens": 1109,
+          "output_tokens": 573,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_business_card.py::test_business_card_extraction",
+          "status": "passed",
+          "time_s": 1.73,
+          "input_tokens": 624,
+          "output_tokens": 127,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_business_card.py::test_business_card_messy_ocr",
+          "status": "passed",
+          "time_s": 1.98,
+          "input_tokens": 627,
+          "output_tokens": 127,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_invoice.py::test_invoice_extraction",
+          "status": "passed",
+          "time_s": 4.26,
+          "input_tokens": 1765,
+          "output_tokens": 428,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_prescription.py::test_prescription_extraction",
+          "status": "passed",
+          "time_s": 3.39,
+          "input_tokens": 908,
+          "output_tokens": 306,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_prescription.py::test_prescription_messy_ocr",
+          "status": "passed",
+          "time_s": 3.09,
+          "input_tokens": 911,
+          "output_tokens": 305,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_purchase_order.py::test_purchase_order_extraction",
+          "status": "passed",
+          "time_s": 5.11,
+          "input_tokens": 1357,
+          "output_tokens": 454,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_purchase_order.py::test_purchase_order_messy_ocr",
+          "status": "passed",
+          "time_s": 6.65,
+          "input_tokens": 1365,
+          "output_tokens": 454,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_receipt.py::test_receipt_extraction",
+          "status": "passed",
+          "time_s": 3.34,
+          "input_tokens": 962,
+          "output_tokens": 348,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_receipt.py::test_receipt_messy_ocr",
+          "status": "passed",
+          "time_s": 3.31,
+          "input_tokens": 968,
+          "output_tokens": 349,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_shipping_label.py::test_shipping_label_extraction",
+          "status": "passed",
+          "time_s": 2.91,
+          "input_tokens": 1073,
+          "output_tokens": 253,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_shipping_label.py::test_shipping_label_messy_ocr",
+          "status": "passed",
+          "time_s": 4.63,
+          "input_tokens": 1077,
+          "output_tokens": 253,
+          "attempts": 1
+        },
+        {
+          "name": "tests/sanity/test_simple_invoice.py::test_simple_invoice_extraction",
+          "status": "passed",
+          "time_s": 1.79,
+          "input_tokens": 423,
+          "output_tokens": 59,
+          "attempts": 1
+        }
+      ]
     }
   ]
 }
