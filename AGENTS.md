@@ -2,6 +2,10 @@
 
 Extracts structured JSON from OCR text using LLM tool-call forced output + Pydantic validation.
 
+## Rules
+
+- **No commits or pushes without approval.** Always ask before `git commit` or `git push`.
+
 ## Commands
 
 ```bash
