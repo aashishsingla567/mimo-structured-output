@@ -2,14 +2,24 @@ import os
 import time
 import json
 import logging
-from dataclasses import dataclass
-from typing import Any, Type, TypeVar
+from dataclasses import dataclass, field
+from typing import Any, TypeVar
 
 from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 
-from utils import TokenUsage, merge_usages
+from utils import (
+    DEFAULT_BASE_URL,
+    DEFAULT_MODEL,
+    ENV_API_KEY,
+    ENV_BASE_URL,
+    ENV_MODEL,
+    MAX_ATTEMPTS,
+    MAX_COMPLETION_TOKENS,
+    TokenUsage,
+    merge_usages,
+)
 
 load_dotenv()
 
@@ -61,20 +71,20 @@ class ExtractionResult:
 class ExtractionConfig:
     """Tuneable knobs for the extraction pipeline."""
 
-    model: str = os.environ.get("MIMO_MODEL", "mimo-v2.5")
-    max_attempts: int = 3
-    max_completion_tokens: int = 5120
+    model: str = field(default_factory=lambda: os.environ.get(ENV_MODEL, DEFAULT_MODEL))
+    max_attempts: int = MAX_ATTEMPTS
+    max_completion_tokens: int = MAX_COMPLETION_TOKENS
     temperature: float = 0
     top_p: float = 1
-    base_url: str = os.environ.get(
-        "MIMO_BASE_URL", "https://token-plan-sgp.xiaomimimo.com/v1"
+    base_url: str = field(
+        default_factory=lambda: os.environ.get(ENV_BASE_URL, DEFAULT_BASE_URL)
     )
 
 
 def get_client(config: ExtractionConfig | None = None) -> OpenAI:
     """Create an OpenAI client from env vars."""
     cfg = config or ExtractionConfig()
-    client = OpenAI(base_url=cfg.base_url, api_key=os.environ["MIMO_API_KEY"])
+    client = OpenAI(base_url=cfg.base_url, api_key=os.environ[ENV_API_KEY])
     log.info("Client initialised (base_url=%s, model=%s)", cfg.base_url, cfg.model)
     return client
 
@@ -82,7 +92,7 @@ def get_client(config: ExtractionConfig | None = None) -> OpenAI:
 def extract_structured(
     client: OpenAI,
     document: str,
-    schema: Type[T],
+    schema: type[T],
     tool_name: str,
     tool_description: str,
     config: ExtractionConfig | None = None,

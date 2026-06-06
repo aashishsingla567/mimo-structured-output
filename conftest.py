@@ -2,14 +2,17 @@ import json
 import os
 import subprocess
 from datetime import datetime, timezone
-from pathlib import Path
 
 import pytest
 
-from utils import TokenUsage, calculate_cost
-
-REPORTS_FILE = Path(__file__).parent / "reports.json"
-REPO_ROOT = Path(__file__).parent
+from utils import (
+    DEFAULT_MODEL,
+    ENV_MODEL,
+    REPORTS_FILE,
+    REPO_ROOT,
+    TokenUsage,
+    calculate_cost,
+)
 
 
 def _is_reports_json_dirty():
@@ -41,7 +44,7 @@ def pytest_configure(config):
         )
     # Set model from --model option
     model = config.getoption("--model")
-    os.environ["MIMO_MODEL"] = model
+    os.environ[ENV_MODEL] = model
 
 
 def pytest_addoption(parser):
@@ -55,8 +58,8 @@ def pytest_addoption(parser):
     parser.addoption(
         "--model",
         action="store",
-        default=os.environ.get("MIMO_MODEL", "mimo-v2.5"),
-        help="Model to use for extraction (default: MIMO_MODEL env or mimo-v2.5)",
+        default=os.environ.get(ENV_MODEL, DEFAULT_MODEL),
+        help=f"Model to use for extraction (default: {ENV_MODEL} env or {DEFAULT_MODEL})",
     )
     parser.addoption(
         "--report",
@@ -179,7 +182,7 @@ def pytest_sessionfinish(session, exitstatus):
         "commit": commit,
         "date": datetime.now(timezone.utc).isoformat(),
         "suite": suite,
-        "model": os.environ.get("MIMO_MODEL", "mimo-v2.5"),
+        "model": os.environ.get(ENV_MODEL, DEFAULT_MODEL),
         "summary": {
             "total": total,
             "passed": passed,
