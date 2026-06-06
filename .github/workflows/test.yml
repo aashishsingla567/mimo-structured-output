@@ -38,6 +38,13 @@ jobs:
           MIMO_API_KEY: ${{ secrets.MIMO_API_KEY }}
           MIMO_BASE_URL: ${{ secrets.MIMO_BASE_URL }}
           MIMO_MODEL: ${{ vars.MIMO_MODEL || 'mimo-v2.5' }}
+      - name: Upload reports artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ github.run_id }}
+          path: reports.json
+          retention-days: 90
       - name: Write job summary
         if: always()
         run: |
