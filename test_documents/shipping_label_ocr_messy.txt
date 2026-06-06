@@ -1,0 +1,38 @@
+============================================
+        DTDC COUR1ER - TAX INVOICE
+============================================
+
+Tracking No: DTDC9876543210
+AWB No: 123456789012
+
+FROM:
+Priyanka Vermma
+45 Park Street, Flat 3B
+Kolkata - 700016
+Ph: +91 87654 32109
+
+TO:
+Vikram Singh
+201 Phase 5, Udyog Viha r
+Gurugram - 122015
+Ph: +91 76543 21098
+
+--------------------------------------------
+Weight: 2.500 Kg
+Dimensions: 30x20x15 cm
+Pieces: 1
+
+Service: Surface
+Contents: Documents
+
+Date of Pickup: 01-Jun-2026
+Expected Delivery: 05-Jun-2026
+
+Amount: 350.00
+GST @ 18%: 63.00
+TotaI: 413.00
+--------------------------------------------
+
+Status: IN TRANSIT
+
+*** This is a computer generated receipt ***

@@ -1,0 +1,22 @@
+HDFC BANK
+Savings Account Statemenl
+
+Account Holder: AMITABH BACHCHAN
+Account No: 50100234567890
+IFSC: HDFC0001234
+Statemenl Period: 01-Apr-2026 to 30-Jun-2026
+
+Opening Balanoe: 1,25,430.50
+
+Date        Desoription                    Debit       Credit      Balanoe
+---------------------------------------------------------------------------
+02/04/2026  UPI/AMAZON INDIA               2,499.00                1,22,931.50
+05/04/2026  NEFT/SALARY APRIL                          85,000.00  2,07,931.50
+08/04/2026  SWIGGY/ORDER                    650.00                 2,07,281.50
+12/04/2026  ATM WDL                          10,000.00             1,97,281.50
+15/04/2026  CREDIT CARD PAYMENT             15,000.00             1,82,281.50
+20/04/2026  ELECTRICITY BILL               3,200.00                 1,79,081.50
+25/04/2026  lNTEREST CREDIT                              312.75     1,79,394.25
+30/04/2026  MAINTENANCE CHG                  500.00                 1,78,894.25
+
+Closing Balanoe: 1,78,894.25

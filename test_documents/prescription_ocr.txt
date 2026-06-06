@@ -1,0 +1,28 @@
+Dr. Priya Menon
+MBBS, MD (Medicine)
+Apollo Hospital
+
+Patient: Suresh Patel
+Age: 45 years
+Date: 02-Jun-2026
+
+Rx:
+
+1. Tab Metformin 500mg
+   1-0-1 (after food)
+   30 days
+
+2. Tab Amlodipine 5mg
+   0-0-1 (night)
+   30 days
+
+3. Cap Omeprazole 20mg
+   1-0-0 (before breakfast)
+   15 days
+
+4. Inh. Asthalin 200mcg
+   2 puffs as needed
+   SOS
+
+Follow up after 2 weeks.
+HbA1c test recommended.

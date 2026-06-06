@@ -1,0 +1,31 @@
+*** SPICE JUNCT1ON RESTAURANT ***
+123 MG Road, lndiranagar
+Bangalore - 560038
+Ph: 080-45678901
+
+8ill No: 1247
+Date: 02/06/2026
+Table: 14
+Server: Ravi
+
+-----------------------------------
+Item                    Qty  Rate
+-----------------------------------
+1. Paneer Tikka          2   320.00
+2. Chicken B1ryani       1   280.00
+3. Garlic Naan           3    60.00
+4. Masala Dal            1   180.00
+5. leera Rice            2   140.00
+6. Cold Coffee           2   120.00
+-----------------------------------
+SubtotaI                    1420.00
+CGST @ 5%                    71.00
+SGST @ 5%                    71.00
+-----------------------------------
+TotaI                     1562.00
+-----------------------------------
+
+Tip: _________
+
+Payment: UPI
+Thank you! Visit again.
