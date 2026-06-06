@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+import pytest
+
 from extraction import get_client, extract_structured
 from schemas.simple_invoice import InvoiceSummary
 
@@ -11,10 +13,11 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-TEST_DOCS_DIR = Path(__file__).parent.parent / "test_documents"
+TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
-def test_simple_invoice_extraction():
+@pytest.mark.sanity
+def test_simple_invoice_extraction(record_result):
     doc = (TEST_DOCS_DIR / "simple_invoice.txt").read_text()
     client = get_client()
 
@@ -26,6 +29,8 @@ def test_simple_invoice_extraction():
         tool_description="Return exactly one Invoice object.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["invoice_id"] == "INV-1024"
@@ -44,7 +49,3 @@ def test_simple_invoice_extraction():
         result.input_tokens,
         result.output_tokens,
     )
-
-
-if __name__ == "__main__":
-    test_simple_invoice_extraction()

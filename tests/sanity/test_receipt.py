@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+import pytest
+
 from extraction import get_client, extract_structured
 from schemas.receipt import RestaurantReceipt
 
@@ -11,10 +13,11 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-TEST_DOCS_DIR = Path(__file__).parent.parent / "test_documents"
+TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
-def test_receipt_extraction():
+@pytest.mark.sanity
+def test_receipt_extraction(record_result):
     doc = (TEST_DOCS_DIR / "receipt_ocr.txt").read_text()
     client = get_client()
 
@@ -26,6 +29,8 @@ def test_receipt_extraction():
         tool_description="Parse an OCR-scanned restaurant receipt into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["merchant_name"], "merchant_name missing"
@@ -54,7 +59,8 @@ def test_receipt_extraction():
     )
 
 
-def test_receipt_messy_ocr():
+@pytest.mark.sanity
+def test_receipt_messy_ocr(record_result):
     """Messy OCR: structure must be correct, but OCR typos preserved as-is."""
     doc = (TEST_DOCS_DIR / "receipt_ocr_messy.txt").read_text()
     client = get_client()
@@ -67,6 +73,8 @@ def test_receipt_messy_ocr():
         tool_description="Parse an OCR-scanned restaurant receipt into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["merchant_name"], "merchant_name missing"
@@ -82,8 +90,3 @@ def test_receipt_messy_ocr():
         result.input_tokens,
         result.output_tokens,
     )
-
-
-if __name__ == "__main__":
-    test_receipt_extraction()
-    test_receipt_messy_ocr()

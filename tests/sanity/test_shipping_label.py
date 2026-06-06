@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+import pytest
+
 from extraction import get_client, extract_structured
 from schemas.shipping_label import ShippingLabel
 
@@ -11,10 +13,11 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-TEST_DOCS_DIR = Path(__file__).parent.parent / "test_documents"
+TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
-def test_shipping_label_extraction():
+@pytest.mark.sanity
+def test_shipping_label_extraction(record_result):
     doc = (TEST_DOCS_DIR / "shipping_label_ocr.txt").read_text()
     client = get_client()
 
@@ -26,6 +29,8 @@ def test_shipping_label_extraction():
         tool_description="Parse an OCR-scanned shipping label into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["tracking_number"], "tracking_number missing"
@@ -55,7 +60,8 @@ def test_shipping_label_extraction():
     )
 
 
-def test_shipping_label_messy_ocr():
+@pytest.mark.sanity
+def test_shipping_label_messy_ocr(record_result):
     """Messy OCR: tracking, addresses extracted, typos like 'Vermma' preserved."""
     doc = (TEST_DOCS_DIR / "shipping_label_ocr_messy.txt").read_text()
     client = get_client()
@@ -68,6 +74,8 @@ def test_shipping_label_messy_ocr():
         tool_description="Parse an OCR-scanned shipping label into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["tracking_number"], "tracking_number missing"
@@ -84,8 +92,3 @@ def test_shipping_label_messy_ocr():
         result.input_tokens,
         result.output_tokens,
     )
-
-
-if __name__ == "__main__":
-    test_shipping_label_extraction()
-    test_shipping_label_messy_ocr()

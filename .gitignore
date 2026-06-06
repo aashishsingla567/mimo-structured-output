@@ -7,5 +7,3 @@ __pycache__/
 dist/
 build/
 .pytest_cache/
-test_documents/real_ocr_business_docs/
-test_documents/real_ocr_receipts/

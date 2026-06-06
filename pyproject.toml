@@ -17,3 +17,7 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+markers = [
+    "sanity: hand-crafted clean/messy OCR tests",
+    "real: real-world OCR output from cloned datasets",
+]

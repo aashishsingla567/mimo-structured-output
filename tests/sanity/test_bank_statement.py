@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+import pytest
+
 from extraction import get_client, extract_structured, ExtractionConfig
 from schemas.bank_statement import BankStatement
 
@@ -11,10 +13,11 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-TEST_DOCS_DIR = Path(__file__).parent.parent / "test_documents"
+TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
-def test_bank_statement_extraction():
+@pytest.mark.sanity
+def test_bank_statement_extraction(record_result):
     doc = (TEST_DOCS_DIR / "bank_statement_ocr.txt").read_text()
     client = get_client()
 
@@ -26,6 +29,8 @@ def test_bank_statement_extraction():
         tool_description="Parse an OCR-scanned bank statement into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["account_holder"], "account_holder missing"
@@ -58,7 +63,8 @@ def test_bank_statement_extraction():
     )
 
 
-def test_bank_statement_messy_ocr():
+@pytest.mark.sanity
+def test_bank_statement_messy_ocr(record_result):
     """Messy OCR: 8 txns extracted, typos like 'Balanoe' preserved as-is."""
     doc = (TEST_DOCS_DIR / "bank_statement_ocr_messy.txt").read_text()
     client = get_client()
@@ -71,6 +77,8 @@ def test_bank_statement_messy_ocr():
         tool_description="Parse an OCR-scanned bank statement into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["account_holder"], "account_holder missing"
@@ -88,8 +96,3 @@ def test_bank_statement_messy_ocr():
         result.input_tokens,
         result.output_tokens,
     )
-
-
-if __name__ == "__main__":
-    test_bank_statement_extraction()
-    test_bank_statement_messy_ocr()

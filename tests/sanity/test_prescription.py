@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+import pytest
+
 from extraction import get_client, extract_structured
 from schemas.prescription import Prescription
 
@@ -11,10 +13,11 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-TEST_DOCS_DIR = Path(__file__).parent.parent / "test_documents"
+TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
-def test_prescription_extraction():
+@pytest.mark.sanity
+def test_prescription_extraction(record_result):
     doc = (TEST_DOCS_DIR / "prescription_ocr.txt").read_text()
     client = get_client()
 
@@ -26,6 +29,8 @@ def test_prescription_extraction():
         tool_description="Parse an OCR-scanned medical prescription into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["patient_name"], "patient_name missing"
@@ -60,7 +65,8 @@ def test_prescription_extraction():
     )
 
 
-def test_prescription_messy_ocr():
+@pytest.mark.sanity
+def test_prescription_messy_ocr(record_result):
     """Messy OCR: 4 meds must be extracted, typos like 'Omeprazloe' preserved."""
     doc = (TEST_DOCS_DIR / "prescription_ocr_messy.txt").read_text()
     client = get_client()
@@ -73,6 +79,8 @@ def test_prescription_messy_ocr():
         tool_description="Parse an OCR-scanned medical prescription into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["patient_name"], "patient_name missing"
@@ -94,8 +102,3 @@ def test_prescription_messy_ocr():
         result.input_tokens,
         result.output_tokens,
     )
-
-
-if __name__ == "__main__":
-    test_prescription_extraction()
-    test_prescription_messy_ocr()

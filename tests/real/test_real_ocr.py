@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-TEST_DOCS_DIR = Path(__file__).parent.parent / "test_documents"
+TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "real"
 
 REAL_RECEIPT_FILES = [
     "receipt_real_1.txt",
@@ -33,8 +33,9 @@ REAL_INVOICE_FILES = [
 ]
 
 
+@pytest.mark.real
 @pytest.mark.parametrize("receipt_file", REAL_RECEIPT_FILES)
-def test_real_receipt_extraction(receipt_file):
+def test_real_receipt_extraction(receipt_file, record_result):
     """Real OCR receipts from Malaysian supermarkets (Tesseract output)."""
     doc = (TEST_DOCS_DIR / receipt_file).read_text()
     client = get_client()
@@ -47,6 +48,8 @@ def test_real_receipt_extraction(receipt_file):
         tool_description="Parse an OCR-scanned receipt into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["merchant_name"], f"{receipt_file}: merchant_name missing"
@@ -72,8 +75,9 @@ def test_real_receipt_extraction(receipt_file):
     )
 
 
+@pytest.mark.real
 @pytest.mark.parametrize("invoice_file", REAL_INVOICE_FILES)
-def test_real_invoice_extraction(invoice_file):
+def test_real_invoice_extraction(invoice_file, record_result):
     """Real OCR invoices from DocILE (US business documents, DocTR output)."""
     doc = (TEST_DOCS_DIR / invoice_file).read_text()
     client = get_client()
@@ -86,6 +90,8 @@ def test_real_invoice_extraction(invoice_file):
         tool_description="Parse an OCR-scanned invoice into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["invoice_number"], f"{invoice_file}: invoice_number missing"

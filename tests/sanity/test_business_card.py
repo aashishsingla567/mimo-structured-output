@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+import pytest
+
 from extraction import get_client, extract_structured
 from schemas.business_card import BusinessCard
 
@@ -11,10 +13,11 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-TEST_DOCS_DIR = Path(__file__).parent.parent / "test_documents"
+TEST_DOCS_DIR = Path(__file__).parent.parent.parent / "test_documents" / "sanity"
 
 
-def test_business_card_extraction():
+@pytest.mark.sanity
+def test_business_card_extraction(record_result):
     doc = (TEST_DOCS_DIR / "business_card_ocr.txt").read_text()
     client = get_client()
 
@@ -26,6 +29,8 @@ def test_business_card_extraction():
         tool_description="Parse an OCR-scanned business card into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["name"], "name missing"
@@ -51,7 +56,8 @@ def test_business_card_extraction():
     )
 
 
-def test_business_card_messy_ocr():
+@pytest.mark.sanity
+def test_business_card_messy_ocr(record_result):
     """Messy OCR: structure correct, typos like 'shama' instead of 'sharma' preserved."""
     doc = (TEST_DOCS_DIR / "business_card_ocr_messy.txt").read_text()
     client = get_client()
@@ -64,6 +70,8 @@ def test_business_card_messy_ocr():
         tool_description="Parse an OCR-scanned business card into structured data.",
     )
 
+    record, _ = record_result
+    record(result)
     data = result.data
 
     assert data["name"], "name missing"
@@ -78,8 +86,3 @@ def test_business_card_messy_ocr():
         result.input_tokens,
         result.output_tokens,
     )
-
-
-if __name__ == "__main__":
-    test_business_card_extraction()
-    test_business_card_messy_ocr()
