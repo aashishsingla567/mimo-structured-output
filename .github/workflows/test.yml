@@ -31,6 +31,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@v4
       - run: uv sync
       - run: uv run pytest --suite=full -v
@@ -38,7 +40,7 @@ jobs:
           MIMO_API_KEY: ${{ secrets.MIMO_API_KEY }}
           MIMO_BASE_URL: ${{ secrets.MIMO_BASE_URL }}
           MIMO_MODEL: ${{ vars.MIMO_MODEL || 'mimo-v2.5' }}
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "ci: update reports.json [skip ci]"
           file_pattern: reports.json
