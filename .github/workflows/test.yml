@@ -24,3 +24,9 @@ jobs:
           MIMO_API_KEY: ${{ secrets.MIMO_API_KEY }}
           MIMO_BASE_URL: ${{ secrets.MIMO_BASE_URL }}
           MIMO_MODEL: ${{ vars.MIMO_MODEL || 'mimo-v2.5' }}
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports.json
+          git diff --staged --quiet || git commit -m "ci: update reports.json [skip ci]"
+          git push
