@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 
+from utils import TokenUsage, merge_usages
+
 load_dotenv()
 
 log = logging.getLogger(__name__)
@@ -38,10 +40,21 @@ class ExtractionResult:
     """Result of a structured extraction call."""
 
     data: dict
-    input_tokens: int = 0
-    output_tokens: int = 0
+    usage: TokenUsage | None = None
     elapsed: float = 0.0
     attempts: int = 0
+
+    @property
+    def input_tokens(self) -> int:
+        return self.usage.prompt_tokens if self.usage else 0
+
+    @property
+    def output_tokens(self) -> int:
+        return self.usage.completion_tokens if self.usage else 0
+
+    @property
+    def cached_tokens(self) -> int:
+        return self.usage.cached_tokens if self.usage else 0
 
 
 @dataclass
@@ -131,8 +144,7 @@ def extract_structured(
 
     # ── Retry loop ───────────────────────────────────────────────────────
     last_error = None
-    total_in = 0
-    total_out = 0
+    usages: list[TokenUsage] = []
     start = time.perf_counter()
 
     for attempt in range(1, cfg.max_attempts + 1):
@@ -167,21 +179,14 @@ def extract_structured(
         log.info("LLM responded in %.2fs", call_elapsed)
 
         # ── Token usage ──────────────────────────────────────────────────
-        usage = resp.usage
-        if usage:
-            in_tok = usage.prompt_tokens
-            out_tok = usage.completion_tokens
-            total_in += in_tok
-            total_out += out_tok
-            log.info(
-                "Tokens — in: %d, out: %d (cumulative: %d / %d)",
-                in_tok,
-                out_tok,
-                total_in,
-                total_out,
-            )
-        else:
-            log.warning("No usage info in response")
+        usage = TokenUsage.from_api_usage(resp.usage)
+        usages.append(usage)
+        log.info(
+            "Tokens — in: %d (cached: %d), out: %d",
+            usage.prompt_tokens,
+            usage.cached_tokens,
+            usage.completion_tokens,
+        )
 
         # ── Extract tool call ────────────────────────────────────────────
         msg = resp.choices[0].message
@@ -203,8 +208,7 @@ def extract_structured(
             elapsed = time.perf_counter() - start
             return ExtractionResult(
                 data=parsed.model_dump(),
-                input_tokens=total_in,
-                output_tokens=total_out,
+                usage=merge_usages(usages),
                 elapsed=elapsed,
                 attempts=attempt,
             )

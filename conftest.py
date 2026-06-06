@@ -6,8 +6,9 @@ from pathlib import Path
 
 import pytest
 
+from utils import TokenUsage, calculate_cost
+
 REPORTS_FILE = Path(__file__).parent / "reports.json"
-PRICING_FILE = Path(__file__).parent / "model_pricing.json"
 REPO_ROOT = Path(__file__).parent
 
 
@@ -25,26 +26,6 @@ def _is_reports_json_dirty():
         return bool(result.stdout.strip())
     except Exception:
         return False
-
-
-def _load_pricing():
-    """Load model pricing from model_pricing.json."""
-    if not PRICING_FILE.exists():
-        return None
-    with open(PRICING_FILE) as f:
-        return json.load(f)
-
-
-def _calculate_cost(input_tokens, output_tokens, model="mimo-v2.5"):
-    """Calculate cost in USD for given token counts."""
-    pricing = _load_pricing()
-    if not pricing or model not in pricing["models"]:
-        return None
-    rates = pricing["models"][model]
-    # Use cache miss pricing for input (worst case)
-    input_cost = (input_tokens / 1_000_000) * rates["input_per_1m_cache_miss"]
-    output_cost = (output_tokens / 1_000_000) * rates["output_per_1m"]
-    return round(input_cost + output_cost, 6)
 
 
 def pytest_configure(config):
@@ -109,6 +90,7 @@ def record_result(request):
         store["time_s"] = round(result.elapsed, 2)
         store["input_tokens"] = result.input_tokens
         store["output_tokens"] = result.output_tokens
+        store["cached_tokens"] = result.cached_tokens
         store["attempts"] = result.attempts
 
     return _record, store
@@ -147,6 +129,7 @@ def pytest_sessionfinish(session, exitstatus):
     total_time = 0.0
     total_in = 0
     total_out = 0
+    total_cached = 0
     total_attempts = 0
 
     for item in session.items:
@@ -161,6 +144,7 @@ def pytest_sessionfinish(session, exitstatus):
         total_time += info.get("time_s", 0)
         total_in += info.get("input_tokens", 0)
         total_out += info.get("output_tokens", 0)
+        total_cached += info.get("cached_tokens", 0)
         total_attempts += info.get("attempts", 0)
 
         test_entry = {
@@ -171,15 +155,24 @@ def pytest_sessionfinish(session, exitstatus):
         if "input_tokens" in info:
             test_entry["input_tokens"] = info["input_tokens"]
             test_entry["output_tokens"] = info["output_tokens"]
+            test_entry["cached_tokens"] = info.get("cached_tokens", 0)
             test_entry["attempts"] = info["attempts"]
-            test_entry["cost_usd"] = _calculate_cost(
-                info["input_tokens"], info["output_tokens"]
+            test_usage = TokenUsage(
+                prompt_tokens=info["input_tokens"],
+                completion_tokens=info["output_tokens"],
+                cached_tokens=info.get("cached_tokens", 0),
             )
+            test_entry["cost_usd"] = calculate_cost(test_usage)
         tests.append(test_entry)
 
     accuracy_pct = round((passed / total * 100), 1) if total > 0 else 0.0
     avg_attempts = round(total_attempts / total, 2) if total > 0 else 0
-    total_cost = _calculate_cost(total_in, total_out)
+    total_usage = TokenUsage(
+        prompt_tokens=total_in,
+        completion_tokens=total_out,
+        cached_tokens=total_cached,
+    )
+    total_cost = calculate_cost(total_usage)
 
     run_entry = {
         "id": run_id,
@@ -195,6 +188,7 @@ def pytest_sessionfinish(session, exitstatus):
             "wall_time_s": round(total_time, 2),
             "total_input_tokens": total_in,
             "total_output_tokens": total_out,
+            "total_cached_tokens": total_cached,
             "total_cost_usd": total_cost,
             "avg_attempts": avg_attempts,
         },
