@@ -4,7 +4,7 @@ Extracts structured JSON from OCR text using LLM tool-call forced output + Pydan
 
 ## Rules
 
-- **No commits or pushes without approval.** Always ask before `git commit` or `git push`.
+- **ZERO TOLERANCE: No commits or pushes without explicit approval.** Always ask before `git commit` or `git push`. NEVER do either without the user explicitly saying yes. No exceptions. No "I'll just commit this quickly." If you violate this, stop immediately.
 
 ## Commands
 
