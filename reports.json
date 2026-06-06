@@ -1,26 +1,27 @@
 {
   "runs": [
     {
-      "id": "20260606_185755",
-      "commit": "3a31d0e",
-      "date": "2026-06-06T18:57:55.506023+00:00",
+      "id": "20260606_192243",
+      "commit": "e851bfc",
+      "date": "2026-06-06T19:22:43.381384+00:00",
       "suite": "full",
+      "model": "mimo-v2.5",
       "summary": {
         "total": 27,
-        "passed": 22,
-        "failed": 5,
-        "accuracy_pct": 81.5,
-        "wall_time_s": 83.97,
-        "total_input_tokens": 32079,
-        "total_output_tokens": 8803,
-        "total_cost_usd": 0.006956,
-        "avg_attempts": 0.89
+        "passed": 27,
+        "failed": 0,
+        "accuracy_pct": 100.0,
+        "wall_time_s": 121.5,
+        "total_input_tokens": 37076,
+        "total_output_tokens": 10470,
+        "total_cost_usd": 0.008122,
+        "avg_attempts": 1.04
       },
       "tests": [
         {
           "name": "tests/real/test_complex_financial.py::test_uk_balance_sheet_flexi",
-          "status": "failed",
-          "time_s": 1.71,
+          "status": "passed",
+          "time_s": 4.68,
           "input_tokens": 2013,
           "output_tokens": 190,
           "attempts": 1,
@@ -29,103 +30,115 @@
         {
           "name": "tests/real/test_complex_financial.py::test_indian_pnl_loyal_textile",
           "status": "passed",
-          "time_s": 1.92,
+          "time_s": 3.59,
           "input_tokens": 2114,
-          "output_tokens": 301,
+          "output_tokens": 303,
           "attempts": 1,
-          "cost_usd": 0.00038
+          "cost_usd": 0.000381
         },
         {
           "name": "tests/real/test_complex_financial.py::test_cas_statement_hdfc",
           "status": "passed",
-          "time_s": 4.14,
+          "time_s": 7.31,
           "input_tokens": 2213,
-          "output_tokens": 782,
+          "output_tokens": 727,
           "attempts": 1,
-          "cost_usd": 0.000529
+          "cost_usd": 0.000513
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_receipt_extraction[receipt_real_1.txt]",
-          "status": "failed",
-          "time_s": 8.31
+          "status": "passed",
+          "time_s": 4.72,
+          "input_tokens": 1373,
+          "output_tokens": 495,
+          "attempts": 1,
+          "cost_usd": 0.000331
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_receipt_extraction[receipt_real_2.txt]",
-          "status": "failed",
-          "time_s": 7.21
+          "status": "passed",
+          "time_s": 3.63,
+          "input_tokens": 1347,
+          "output_tokens": 281,
+          "attempts": 1,
+          "cost_usd": 0.000267
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_receipt_extraction[receipt_real_3.txt]",
           "status": "passed",
-          "time_s": 2.51,
-          "input_tokens": 1062,
-          "output_tokens": 376,
-          "attempts": 1,
-          "cost_usd": 0.000254
+          "time_s": 8.04,
+          "input_tokens": 2198,
+          "output_tokens": 727,
+          "attempts": 2,
+          "cost_usd": 0.000511
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_receipt_extraction[receipt_real_4.txt]",
           "status": "passed",
-          "time_s": 3.03,
+          "time_s": 5.63,
           "input_tokens": 1246,
-          "output_tokens": 453,
+          "output_tokens": 455,
           "attempts": 1,
-          "cost_usd": 0.000301
+          "cost_usd": 0.000302
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_receipt_extraction[receipt_real_5.txt]",
-          "status": "failed",
-          "time_s": 7.91
+          "status": "passed",
+          "time_s": 3.75,
+          "input_tokens": 1141,
+          "output_tokens": 330,
+          "attempts": 1,
+          "cost_usd": 0.000252
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_invoice_extraction[invoice_real_1.txt]",
           "status": "passed",
-          "time_s": 2.52,
+          "time_s": 4.49,
           "input_tokens": 1700,
-          "output_tokens": 341,
+          "output_tokens": 364,
           "attempts": 1,
-          "cost_usd": 0.000333
+          "cost_usd": 0.00034
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_invoice_extraction[invoice_real_2.txt]",
           "status": "passed",
-          "time_s": 4.5,
+          "time_s": 6.34,
           "input_tokens": 2241,
-          "output_tokens": 708,
+          "output_tokens": 566,
           "attempts": 1,
-          "cost_usd": 0.000512
+          "cost_usd": 0.000472
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_invoice_extraction[invoice_real_3.txt]",
           "status": "passed",
-          "time_s": 2.13,
+          "time_s": 3.37,
           "input_tokens": 1705,
-          "output_tokens": 291,
+          "output_tokens": 292,
           "attempts": 1,
           "cost_usd": 0.00032
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_invoice_extraction[invoice_real_4.txt]",
           "status": "passed",
-          "time_s": 2.2,
+          "time_s": 3.31,
           "input_tokens": 1586,
-          "output_tokens": 316,
+          "output_tokens": 188,
           "attempts": 1,
-          "cost_usd": 0.000311
+          "cost_usd": 0.000275
         },
         {
           "name": "tests/real/test_real_ocr.py::test_real_invoice_extraction[invoice_real_5.txt]",
           "status": "passed",
-          "time_s": 2.71,
+          "time_s": 8.3,
           "input_tokens": 1935,
-          "output_tokens": 415,
+          "output_tokens": 947,
           "attempts": 1,
-          "cost_usd": 0.000387
+          "cost_usd": 0.000536
         },
         {
           "name": "tests/sanity/test_bank_statement.py::test_bank_statement_extraction",
           "status": "passed",
-          "time_s": 3.17,
+          "time_s": 6.12,
           "input_tokens": 1095,
           "output_tokens": 573,
           "attempts": 1,
@@ -134,7 +147,7 @@
         {
           "name": "tests/sanity/test_bank_statement.py::test_bank_statement_messy_ocr",
           "status": "passed",
-          "time_s": 3.24,
+          "time_s": 5.54,
           "input_tokens": 1109,
           "output_tokens": 573,
           "attempts": 1,
@@ -143,7 +156,7 @@
         {
           "name": "tests/sanity/test_business_card.py::test_business_card_extraction",
           "status": "passed",
-          "time_s": 1.66,
+          "time_s": 2.68,
           "input_tokens": 624,
           "output_tokens": 127,
           "attempts": 1,
@@ -152,7 +165,7 @@
         {
           "name": "tests/sanity/test_business_card.py::test_business_card_messy_ocr",
           "status": "passed",
-          "time_s": 1.52,
+          "time_s": 2.81,
           "input_tokens": 627,
           "output_tokens": 127,
           "attempts": 1,
@@ -160,17 +173,17 @@
         },
         {
           "name": "tests/sanity/test_invoice.py::test_invoice_extraction",
-          "status": "failed",
-          "time_s": 2.96,
+          "status": "passed",
+          "time_s": 4.48,
           "input_tokens": 1765,
-          "output_tokens": 466,
+          "output_tokens": 428,
           "attempts": 1,
-          "cost_usd": 0.000378
+          "cost_usd": 0.000367
         },
         {
           "name": "tests/sanity/test_prescription.py::test_prescription_extraction",
           "status": "passed",
-          "time_s": 2.36,
+          "time_s": 3.48,
           "input_tokens": 908,
           "output_tokens": 302,
           "attempts": 1,
@@ -179,7 +192,7 @@
         {
           "name": "tests/sanity/test_prescription.py::test_prescription_messy_ocr",
           "status": "passed",
-          "time_s": 2.23,
+          "time_s": 4.07,
           "input_tokens": 911,
           "output_tokens": 305,
           "attempts": 1,
@@ -188,25 +201,25 @@
         {
           "name": "tests/sanity/test_purchase_order.py::test_purchase_order_extraction",
           "status": "passed",
-          "time_s": 2.93,
+          "time_s": 4.3,
           "input_tokens": 1357,
-          "output_tokens": 443,
+          "output_tokens": 454,
           "attempts": 1,
-          "cost_usd": 0.000314
+          "cost_usd": 0.000317
         },
         {
           "name": "tests/sanity/test_purchase_order.py::test_purchase_order_messy_ocr",
           "status": "passed",
-          "time_s": 2.8,
+          "time_s": 4.72,
           "input_tokens": 1365,
-          "output_tokens": 443,
+          "output_tokens": 454,
           "attempts": 1,
-          "cost_usd": 0.000315
+          "cost_usd": 0.000318
         },
         {
           "name": "tests/sanity/test_receipt.py::test_receipt_extraction",
           "status": "passed",
-          "time_s": 3.09,
+          "time_s": 3.86,
           "input_tokens": 962,
           "output_tokens": 348,
           "attempts": 1,
@@ -215,7 +228,7 @@
         {
           "name": "tests/sanity/test_receipt.py::test_receipt_messy_ocr",
           "status": "passed",
-          "time_s": 2.32,
+          "time_s": 3.62,
           "input_tokens": 968,
           "output_tokens": 349,
           "attempts": 1,
@@ -224,25 +237,25 @@
         {
           "name": "tests/sanity/test_shipping_label.py::test_shipping_label_extraction",
           "status": "passed",
-          "time_s": 1.96,
+          "time_s": 3.25,
           "input_tokens": 1073,
-          "output_tokens": 261,
+          "output_tokens": 253,
           "attempts": 1,
-          "cost_usd": 0.000223
+          "cost_usd": 0.000221
         },
         {
           "name": "tests/sanity/test_shipping_label.py::test_shipping_label_messy_ocr",
           "status": "passed",
-          "time_s": 1.86,
+          "time_s": 3.05,
           "input_tokens": 1077,
-          "output_tokens": 254,
+          "output_tokens": 253,
           "attempts": 1,
           "cost_usd": 0.000222
         },
         {
           "name": "tests/sanity/test_simple_invoice.py::test_simple_invoice_extraction",
           "status": "passed",
-          "time_s": 1.07,
+          "time_s": 2.36,
           "input_tokens": 423,
           "output_tokens": 59,
           "attempts": 1,
