@@ -3,10 +3,22 @@ name: Tests
 on:
   push:
     branches: [main]
-    paths: ["**/*.py"]
+    paths:
+      - "**.py"
+      - "schemas/**"
+      - "tests/**"
+      - "test_documents/**"
+      - "pyproject.toml"
+      - ".github/workflows/test.yml"
   pull_request:
     branches: [main]
-    paths: ["**/*.py"]
+    paths:
+      - "**.py"
+      - "schemas/**"
+      - "tests/**"
+      - "test_documents/**"
+      - "pyproject.toml"
+      - ".github/workflows/test.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
