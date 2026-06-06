@@ -1,6 +1,6 @@
 # mimo-structured-output
 
-[![Tests](https://github.com/aashishsingla567/mimo-structured-output/actions/workflows/test.yml/badge.svg)](https://github.com/aashishsingla567/mimo-structured-output/actions/workflows/test.yml)
+[![CI](https://github.com/aashishsingla567/mimo-structured-output/actions/workflows/test.yml/badge.svg)](https://github.com/aashishsingla567/mimo-structured-output/actions/workflows/test.yml)
 
 Extract structured JSON from messy OCR text using an LLM with tool-call forced output, Pydantic validation, and automatic retry.
 
