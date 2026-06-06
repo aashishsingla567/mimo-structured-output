@@ -1,11 +1,12 @@
+import logging
+
 import pytest
 
-from extraction import get_client, extract_structured
-from schemas.uk_balance_sheet import UKBalanceSheet
-from schemas.indian_pnl import IndianPnL
+from extraction import extract_structured, get_client
 from schemas.cas_statement import CASStatement
+from schemas.indian_pnl import IndianPnL
+from schemas.uk_balance_sheet import UKBalanceSheet
 from tests.conftest import TEST_DOCS_REAL
-import logging
 
 log = logging.getLogger(__name__)
 
@@ -122,9 +123,7 @@ def test_cas_statement_hdfc(record_result):
     data = result.data
 
     assert data["schemes"], "schemes list missing"
-    assert len(data["schemes"]) >= 2, (
-        f"expected >=2 schemes, got {len(data['schemes'])}"
-    )
+    assert len(data["schemes"]) >= 2, f"expected >=2 schemes, got {len(data['schemes'])}"
     assert data["total_portfolio_value"] is not None, "total_portfolio_value missing"
 
     for scheme in data["schemes"]:

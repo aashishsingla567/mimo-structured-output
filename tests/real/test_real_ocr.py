@@ -1,10 +1,11 @@
+import logging
+
 import pytest
 
-from extraction import get_client, extract_structured
-from schemas.receipt import RestaurantReceipt
+from extraction import extract_structured, get_client
 from schemas.invoice import Invoice
+from schemas.receipt import RestaurantReceipt
 from tests.conftest import TEST_DOCS_REAL
-import logging
 
 log = logging.getLogger(__name__)
 

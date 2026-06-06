@@ -1,6 +1,6 @@
 import logging
 
-from extraction import get_client, extract_structured
+from extraction import extract_structured, get_client
 from schemas.invoice import Invoice
 
 logging.basicConfig(

@@ -36,9 +36,7 @@ def get_current_reports() -> dict | None:
         return json.load(f)
 
 
-def fmt_delta(
-    curr: float | None, prev: float | None, lower_is_better: bool = True
-) -> str:
+def fmt_delta(curr: float | None, prev: float | None, lower_is_better: bool = True) -> str:
     """Format delta with arrow indicator."""
     if prev is None or curr is None:
         return "N/A"
@@ -118,12 +116,12 @@ def compare_runs(prev_run: dict, curr_run: dict) -> None:
                 improved.append((name, pa, ca))
 
     if regressed:
-        print(f"\n\u26a0 Regressed (more attempts):")
+        print("\n\u26a0 Regressed (more attempts):")
         for name, pa, ca in regressed:
             print(f"  {name}: {pa} \u2192 {ca}")
 
     if improved:
-        print(f"\n\u2713 Improved (fewer attempts):")
+        print("\n\u2713 Improved (fewer attempts):")
         for name, pa, ca in improved:
             print(f"  {name}: {pa} \u2192 {ca}")
 

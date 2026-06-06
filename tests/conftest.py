@@ -3,8 +3,6 @@
 import logging
 from pathlib import Path
 
-import pytest
-
 TEST_DOCS_DIR = Path(__file__).parent.parent / "test_documents"
 TEST_DOCS_SANITY = TEST_DOCS_DIR / "sanity"
 TEST_DOCS_REAL = TEST_DOCS_DIR / "real"

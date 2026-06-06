@@ -1,11 +1,10 @@
-from pathlib import Path
+import logging
 
 import pytest
 
-from extraction import get_client, extract_structured
+from extraction import extract_structured, get_client
 from schemas.business_card import BusinessCard
 from tests.conftest import TEST_DOCS_SANITY
-import logging
 
 log = logging.getLogger(__name__)
 

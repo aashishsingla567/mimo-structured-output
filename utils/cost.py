@@ -27,9 +27,7 @@ def calculate_cost(usage: TokenUsage, model: str | None = None) -> float | None:
         return None
     rates = pricing["models"][model]
 
-    miss_cost = (usage.billable_input_tokens / 1_000_000) * rates[
-        "input_per_1m_cache_miss"
-    ]
+    miss_cost = (usage.billable_input_tokens / 1_000_000) * rates["input_per_1m_cache_miss"]
     hit_cost = (usage.cached_tokens / 1_000_000) * rates["input_per_1m_cache_hit"]
     out_cost = (usage.completion_tokens / 1_000_000) * rates["output_per_1m"]
 

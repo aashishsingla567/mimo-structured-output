@@ -1,12 +1,12 @@
 import json
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
 from utils import (
-    REPORTS_FILE,
     REPO_ROOT,
+    REPORTS_FILE,
     TokenUsage,
     calculate_cost,
     env,
@@ -108,7 +108,7 @@ def pytest_runtest_makereport(item, call):
 def pytest_sessionfinish(session, exitstatus):
 
     suite = session.config.getoption("--suite")
-    run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    run_id = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
 
     try:
         commit = subprocess.check_output(
@@ -172,7 +172,7 @@ def pytest_sessionfinish(session, exitstatus):
     run_entry = {
         "id": run_id,
         "commit": commit,
-        "date": datetime.now(timezone.utc).isoformat(),
+        "date": datetime.now(UTC).isoformat(),
         "suite": suite,
         "model": env.MIMO_MODEL,
         "summary": {

@@ -14,6 +14,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
+    "ruff>=0.15.16",
 ]
 
 [tool.pytest.ini_options]
@@ -22,3 +23,14 @@ markers = [
     "sanity: hand-crafted clean/messy OCR tests",
     "real: real-world OCR output from cloned datasets",
 ]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["utils", "schemas", "extraction"]

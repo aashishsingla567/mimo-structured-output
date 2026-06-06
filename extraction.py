@@ -1,8 +1,8 @@
-import time
 import json
 import logging
+import time
 from dataclasses import dataclass, field
-from typing import Any, TypeVar
+from typing import Any
 
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
@@ -16,8 +16,6 @@ from utils import (
 )
 
 log = logging.getLogger(__name__)
-
-T = TypeVar("T", bound=BaseModel)
 
 
 def _coerce_nested_json_strings(obj: Any) -> Any:
@@ -79,7 +77,7 @@ def get_client(config: ExtractionConfig | None = None) -> OpenAI:
     return client
 
 
-def extract_structured(
+def extract_structured[T: BaseModel](
     client: OpenAI,
     document: str,
     schema: type[T],
@@ -220,6 +218,5 @@ def extract_structured(
     elapsed = time.perf_counter() - start
     log.error("All %d attempts failed", cfg.max_attempts)
     raise RuntimeError(
-        f"Could not get valid structured output after {cfg.max_attempts} attempts: "
-        f"{last_error}"
+        f"Could not get valid structured output after {cfg.max_attempts} attempts: {last_error}"
     )
