@@ -102,8 +102,8 @@ mimo-structured-output/
 # Install
 uv sync
 
-# Set API key
-echo 'MIMO_API_KEY="your-key"' > .env
+# Set API key (Token Plan or Pay-as-you-go)
+cp .env.example .env  # edit with your key
 
 # Run example
 uv run main.py
@@ -117,6 +117,15 @@ uv run pytest --suite=full        # all 27 tests
 uv run pytest --suite=full --model=mimo-v2.5
 uv run python diff_report.py      # show gains vs previous run
 ```
+
+## API Endpoints
+
+| Plan              | Base URL                                   | Key format | Supported models                                           |
+| ----------------- | ------------------------------------------ | ---------- | ---------------------------------------------------------- |
+| **Token Plan**    | `https://token-plan-sgp.xiaomimimo.com/v1` | `tp-xxxxx` | mimo-v2.5, mimo-v2.5-pro, mimo-v2-pro, mimo-v2-omni, + TTS |
+| **Pay-as-you-go** | `https://api.xiaomimimo.com/v1`            | `sk-xxxxx` | All models including mimo-v2-flash                         |
+
+Set via `MIMO_BASE_URL` in `.env`. Defaults to Token Plan.
 
 ## Test Suites
 
