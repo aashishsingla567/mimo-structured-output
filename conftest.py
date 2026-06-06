@@ -13,34 +13,7 @@ from utils import (
 )
 
 
-def _is_reports_json_dirty():
-    """Check if reports.json has uncommitted changes (staged or unstaged)."""
-    if not REPORTS_FILE.exists():
-        return False
-    try:
-        result = subprocess.run(
-            ["git", "status", "--porcelain", "reports.json"],
-            cwd=str(REPO_ROOT),
-            capture_output=True,
-            text=True,
-        )
-        return bool(result.stdout.strip())
-    except Exception:
-        return False
-
-
 def pytest_configure(config):
-    """Block test runs if reports.json has uncommitted changes."""
-    if _is_reports_json_dirty():
-        pytest.exit(
-            "\n\nreports.json has uncommitted changes.\n"
-            "Commit or discard them before running tests:\n\n"
-            "  git add reports.json && git commit -m 'Update test report'\n"
-            "  # or\n"
-            "  git checkout -- reports.json\n",
-            returncode=1,
-        )
-    # Override model from --model option
     model = config.getoption("--model")
     env.MIMO_MODEL = model
 

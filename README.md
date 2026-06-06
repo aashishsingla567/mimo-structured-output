@@ -60,11 +60,17 @@ Some models (including mimo-v2.5) occasionally serialize nested objects as JSON 
 mimo-structured-output/
 ├── extraction.py                 # Core pipeline: extract_structured(), ExtractionConfig, ExtractionResult
 ├── main.py                       # Example entry point
-├── conftest.py                   # pytest: --suite/--model flags, stats collection, reports.json guard
-├── commit_report.py              # Post-test script: commits reports.json
+├── conftest.py                   # pytest: --suite/--model flags, stats collection, reports.json output
 ├── diff_report.py                # Compare current vs previous run (tokens, cost, time)
 ├── model_pricing.json            # Pricing per model (USD/1M tokens)
-├── reports.json                  # Auto-generated test run stats (time, tokens, accuracy, cost)
+├── reports.json                  # Local test run stats (not committed — local tracking only)
+│
+├── utils/                        # Shared utilities
+│   ├── __init__.py               #   Public exports
+│   ├── env.py                    #   T3-style Pydantic BaseSettings for env validation
+│   ├── tokens.py                 #   TokenUsage dataclass with cache-aware billing
+│   ├── cost.py                   #   calculate_cost() with cache-hit/miss split pricing
+│   └── constants.py              #   MAX_ATTEMPTS, MAX_COMPLETION_TOKENS, file paths
 │
 ├── schemas/                      # One Pydantic model per document type (11 total)
 │   ├── invoice.py                #   Detailed GST invoice (items, summary, payment, references)
@@ -90,9 +96,8 @@ mimo-structured-output/
 │   ├── sanity/                   # Hand-crafted OCR text (clean + messy variants)
 │   └── real/                     # Real OCR output
 │
-├── .github/workflows/test.yml    # CI: runs sanity then full suite on merge
-├── reports.json                  # Per-run stats: time, tokens, accuracy, cost
-├── pyproject.toml                # Project config, pytest markers
+├── .github/workflows/test.yml    # CI: runs full suite, job summary with results
+├── pyproject.toml                # Project config, pytest markers, ruff config
 └── .env                          # MIMO_API_KEY, MIMO_BASE_URL (gitignored)
 ```
 
@@ -156,7 +161,7 @@ uv run pytest --model=mimo-v2-omni # compare with omni
 
 ## reports.json
 
-Every run with `--report` appends a structured entry to `reports.json`:
+Every test run writes a structured entry to `reports.json` (local tracking, not committed):
 
 ```json
 {
@@ -166,6 +171,7 @@ Every run with `--report` appends a structured entry to `reports.json`:
       "commit": "b0045bd",
       "date": "2026-06-06T17:13:50Z",
       "suite": "full",
+      "model": "mimo-v2.5",
       "summary": {
         "total": 24,
         "passed": 24,
@@ -174,29 +180,13 @@ Every run with `--report` appends a structured entry to `reports.json`:
         "wall_time_s": 92.74,
         "total_input_tokens": 24580,
         "total_output_tokens": 8320,
+        "total_cost_usd": 0.0084,
         "avg_attempts": 1.0
       },
-      "tests": [
-        {
-          "name": "tests/sanity/test_receipt.py::test_receipt_extraction",
-          "status": "passed",
-          "time_s": 3.51,
-          "input_tokens": 962,
-          "output_tokens": 348,
-          "attempts": 1
-        }
-      ]
+      "tests": [...]
     }
   ]
 }
-```
-
-**Guard rule**: If `reports.json` has uncommitted changes, `--report` is blocked until you commit or discard:
-
-```
-reports.json has uncommitted changes.
-Commit or discard them before running tests:
-  git add reports.json && git commit -m 'Update test report'
 ```
 
 ## Usage
@@ -218,6 +208,7 @@ result = extract_structured(
 print(result.data)           # validated dict
 print(result.input_tokens)   # prompt tokens used
 print(result.output_tokens)  # completion tokens used
+print(result.cached_tokens)  # cache-hit tokens (cost savings)
 print(result.elapsed)        # total time in seconds
 print(result.attempts)       # API calls made
 ```
@@ -242,6 +233,7 @@ print(result.attempts)       # API calls made
 | `data`          | `dict`  | Validated Pydantic output                   |
 | `input_tokens`  | `int`   | Total prompt tokens across all attempts     |
 | `output_tokens` | `int`   | Total completion tokens across all attempts |
+| `cached_tokens` | `int`   | Cache-hit tokens (cost savings)             |
 | `elapsed`       | `float` | Wall-clock seconds                          |
 | `attempts`      | `int`   | Number of API calls made                    |
 

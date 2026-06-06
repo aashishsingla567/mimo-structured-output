@@ -9,6 +9,7 @@ on:
       - "tests/**/*.py"
       - "test_documents/**"
       - "conftest.py"
+      - "utils/**"
       - ".github/workflows/test.yml"
   pull_request:
     branches: [main]
@@ -18,6 +19,7 @@ on:
       - "tests/**/*.py"
       - "test_documents/**"
       - "conftest.py"
+      - "utils/**"
       - ".github/workflows/test.yml"
 
 concurrency:
@@ -27,12 +29,8 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: astral-sh/setup-uv@v4
       - run: uv sync
       - run: uv run pytest --suite=full -v
@@ -40,7 +38,52 @@ jobs:
           MIMO_API_KEY: ${{ secrets.MIMO_API_KEY }}
           MIMO_BASE_URL: ${{ secrets.MIMO_BASE_URL }}
           MIMO_MODEL: ${{ vars.MIMO_MODEL || 'mimo-v2.5' }}
-      - uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: "ci: update reports.json [skip ci]"
-          file_pattern: reports.json
+      - name: Write job summary
+        if: always()
+        run: |
+          if [ ! -f reports.json ]; then
+            echo "### Tests" >> $GITHUB_STEP_SUMMARY
+            echo "No reports.json generated." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          python3 -c "
+          import json, os
+
+          with open('reports.json') as f:
+              data = json.load(f)
+
+          run = data['runs'][-1]
+          s = run['summary']
+          model = run.get('model', 'unknown')
+          run_id = run.get('id', 'unknown')
+
+          status = 'PASS' if s['failed'] == 0 else 'FAIL'
+          emoji = '&#9989;' if status == 'PASS' else '&#10060;'
+
+          print(f'### {emoji} Test Results — \`{model}\`')
+          print()
+          print(f'| Metric | Value |')
+          print(f'|--------|-------|')
+          print(f'| Status | **{status}** |')
+          print(f'| Passed | {s[\"passed\"]}/{s[\"total\"]} |')
+          print(f'| Accuracy | {s[\"accuracy_pct\"]}% |')
+          print(f'| Wall time | {s[\"wall_time_s\"]}s |')
+          print(f'| Input tokens | {s[\"total_input_tokens\"]:,} |')
+          print(f'| Output tokens | {s[\"total_output_tokens\"]:,} |')
+          print(f'| Cached tokens | {s.get(\"total_cached_tokens\", 0):,} |')
+          print(f'| Cost | \${s[\"total_cost_usd\"]:.4f} |')
+          print(f'| Avg attempts | {s[\"avg_attempts\"]} |')
+          print(f'| Run ID | \`{run_id}\` |')
+          print()
+
+          failed = [t for t in run['tests'] if t['status'] == 'failed']
+          if failed:
+              print('### Failed Tests')
+              print()
+              print('| Test | Attempts |')
+              print('|------|----------|')
+              for t in failed:
+                  print(f'| \`{t[\"name\"]}\` | {t.get(\"attempts\", 1)} |')
+              print()
+          " >> $GITHUB_STEP_SUMMARY
