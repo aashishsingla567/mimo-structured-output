@@ -1,5 +1,7 @@
 # mimo-structured-output
 
+[![Tests](https://github.com/aashishsingla567/mimo-structured-output/actions/workflows/test.yml/badge.svg)](https://github.com/aashishsingla567/mimo-structured-output/actions/workflows/test.yml)
+
 Extract structured JSON from messy OCR text using an LLM with tool-call forced output, Pydantic validation, and automatic retry.
 
 ## Objective
@@ -58,11 +60,13 @@ Some models (including mimo-v2.5) occasionally serialize nested objects as JSON 
 mimo-structured-output/
 ├── extraction.py                 # Core pipeline: extract_structured(), ExtractionConfig, ExtractionResult
 ├── main.py                       # Example entry point
-├── conftest.py                   # pytest: --suite flag, --report flag, stats collection
+├── conftest.py                   # pytest: --suite/--model flags, stats collection, reports.json guard
 ├── commit_report.py              # Post-test script: commits reports.json
-├── reports.json                  # Auto-generated test run stats (time, tokens, accuracy)
+├── diff_report.py                # Compare current vs previous run (tokens, cost, time)
+├── model_pricing.json            # Pricing per model (USD/1M tokens)
+├── reports.json                  # Auto-generated test run stats (time, tokens, accuracy, cost)
 │
-├── schemas/                      # One Pydantic model per document type
+├── schemas/                      # One Pydantic model per document type (11 total)
 │   ├── invoice.py                #   Detailed GST invoice (items, summary, payment, references)
 │   ├── simple_invoice.py         #   Minimal invoice (id, total, currency, status)
 │   ├── receipt.py                #   Restaurant bill (items, tax, tip)
@@ -70,28 +74,26 @@ mimo-structured-output/
 │   ├── prescription.py           #   Medical Rx (medications, dosage, frequency)
 │   ├── bank_statement.py         #   Account statement (transactions, balances)
 │   ├── purchase_order.py         #   PO (buyer, seller, line items)
-│   └── shipping_label.py         #   Courier label (sender, recipient, tracking)
+│   ├── shipping_label.py         #   Courier label (sender, recipient, tracking)
+│   ├── uk_balance_sheet.py       #   UK Companies House balance sheet
+│   ├── indian_pnl.py             #   Indian multi-column P&L
+│   └── cas_statement.py          #   CAMS/KFintech mutual fund CAS
 │
 ├── tests/
 │   ├── sanity/                   # Hand-crafted clean/messy OCR tests (14 tests)
-│   │   ├── test_bank_statement.py
-│   │   ├── test_business_card.py
-│   │   ├── test_invoice.py
-│   │   ├── test_prescription.py
-│   │   ├── test_purchase_order.py
-│   │   ├── test_receipt.py
-│   │   ├── test_shipping_label.py
-│   │   └── test_simple_invoice.py
-│   └── real/                     # Real OCR from cloned datasets (10 tests)
-│       └── test_real_ocr.py      #   5 receipts + 5 invoices, parametrized
+│   │   └── ...
+│   └── real/                     # Real OCR from cloned datasets (13 tests)
+│       ├── test_real_ocr.py      #   5 receipts + 5 invoices
+│       └── test_complex_financial.py  # UK BS, Indian P&L, CAS
 │
 ├── test_documents/
 │   ├── sanity/                   # Hand-crafted OCR text (clean + messy variants)
-│   └── real/                     # Real OCR output (mertbek10/receipt-OCR, DocILE)
+│   └── real/                     # Real OCR output
 │
-├── reports.json                  # Per-run stats: time, tokens, accuracy, attempts
+├── .github/workflows/test.yml    # CI: runs sanity then full suite on merge
+├── reports.json                  # Per-run stats: time, tokens, accuracy, cost
 ├── pyproject.toml                # Project config, pytest markers
-└── .env                          # MIMO_API_KEY (gitignored)
+└── .env                          # MIMO_API_KEY, MIMO_BASE_URL (gitignored)
 ```
 
 ## Quick Start
@@ -108,12 +110,12 @@ uv run main.py
 
 # Run tests
 uv run pytest --suite=sanity      # 14 hand-crafted tests
-uv run pytest --suite=real        # 10 real OCR tests
-uv run pytest --suite=full        # all 24 tests
+uv run pytest --suite=real        # 13 real OCR tests
+uv run pytest --suite=full        # all 27 tests
 
-# Run with reporting
-uv run pytest --suite=full --report
-uv run python commit_report.py    # commit the report
+# Compare model performance
+uv run pytest --suite=full --model=mimo-v2.5
+uv run python diff_report.py      # show gains vs previous run
 ```
 
 ## Test Suites
@@ -139,7 +141,8 @@ Tests assert **structural correctness** — fields exist, types match, amounts a
 uv run pytest --suite=sanity       # only sanity tests (default)
 uv run pytest --suite=real         # only real OCR tests
 uv run pytest --suite=full         # both suites
-uv run pytest --suite=full --report  # run + write stats to reports.json
+uv run pytest --model=mimo-v2.5    # select model (default: mimo-v2.5)
+uv run pytest --model=mimo-v2-omni # compare with omni
 ```
 
 ## reports.json
