@@ -29,8 +29,59 @@ target-version = "py312"
 line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "W", "UP", "B", "SIM"]
-ignore = ["E501"]
+select = [
+    # pycodestyle
+    "E",
+    "W",
+    # Pyflakes
+    "F",
+    # isort — deterministic import order (critical for AI-generated code)
+    "I",
+    # flake8-bugbear — catches mutable defaults, unused args, common bugs
+    "B",
+    # pyupgrade — modern Python 3.12+ syntax
+    "UP",
+    # flake8-simplify — simpler code patterns
+    "SIM",
+    # Ruff-specific rules
+    "RUF",
+    # flake8-comprehensions — better list/dict/set comprehension usage
+    "C4",
+    # flake8-return — proper return patterns
+    "RET",
+    # flake8-use-pathlib — prefer pathlib over os.path
+    "PTH",
+    # flake8-type-checking — TYPE_CHECKING block imports
+    "TC",
+    # flake8-bandit — security best practices
+    "S",
+    # flake8-todos — TODO comment hygiene
+    "TD",
+    # flake8-pytest-style — pytest best practices
+    "PT",
+    # flake8-boolean-trap — boolean trap prevention
+    "FBT",
+]
+ignore = [
+    "E501",   # line length — handled by formatter
+    "S101",   # assert usage — allowed in tests
+    "S603",   # subprocess call with untrusted input — git commands are safe
+    "S607",   # partial executable path — git is always in PATH
+    "FBT001", # boolean positional argument — too strict
+    "FBT002", # boolean default argument — too strict
+    "FBT003", # boolean trap — too strict for this codebase
+    "RET504", # unnecessary assignment before return — sometimes aids readability
+    "PTH123", # open() vs Path.open() — both are valid
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S106"]  # assert, hardcoded passwords OK in tests
+"__init__.py" = ["F401"]           # unused imports in __init__ are re-exports
 
 [tool.ruff.lint.isort]
 known-first-party = ["utils", "schemas", "extraction"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
