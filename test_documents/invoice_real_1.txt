@@ -1,0 +1,42 @@
+FROM - :
+PHONE NO. :
+Jan. 04 1997 12:58AM P2
+422
+Innovative Resource Group, Inc.
+101 Emerson Avenue, Pittsburgh, PA 15215
+Tel 412-781-7400 Fax 412-781-6794
+Invoice
+DATE
+12/8/99
+INVOICE #
+2455
+TERMS
+Net 30
+BILL TO
+Mr. JeffFalvo
+Marketing Information & Planning
+Philip Morris USA
+120 Park Avenuc
+New York, NY 10017
+P,O.NO.
+DESCRIPTION
+Billing for Kathy Eisner
+Billing for Viv Penninti
+Travel Expenses
+HOURS
+RATE
+150,00
+220.00
+2,271.83
+AMOUNT
+6,000,00
+2,200.00
+2,271.83
+40
+10.
+Please remit payment to: IRG, Inc.
+101 Emerson Ave, Piusburgh, PA 15215
+Total
+$10,471.83
+Innovative Resouce Group, Inc. 101 Emerson Ave.
+Tek: 412-781-7400 Fax: 412-781-6794 E-Mail: irgeorp@irgeorp.com
