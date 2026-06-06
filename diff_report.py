@@ -147,6 +147,9 @@ def main():
     prev_run = prev_data["runs"][-1]
 
     print(f"Comparing: {prev_run.get('id')} → {curr_run.get('id')}")
+    print(
+        f"Models:    {prev_run.get('model', 'mimo-v2.5')} → {curr_run.get('model', 'mimo-v2.5')}"
+    )
     compare_runs(prev_run, curr_run)
 
 

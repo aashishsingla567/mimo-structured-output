@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -57,6 +58,9 @@ def pytest_configure(config):
             "  git checkout -- reports.json\n",
             returncode=1,
         )
+    # Set model from --model option
+    model = config.getoption("--model")
+    os.environ["MIMO_MODEL"] = model
 
 
 def pytest_addoption(parser):
@@ -66,6 +70,12 @@ def pytest_addoption(parser):
         default="sanity",
         choices=["sanity", "real", "full"],
         help="Test suite to run: sanity, real, or full",
+    )
+    parser.addoption(
+        "--model",
+        action="store",
+        default="mimo-v2.5",
+        help="Model to use for extraction (default: mimo-v2.5)",
     )
     parser.addoption(
         "--report",
@@ -176,6 +186,7 @@ def pytest_sessionfinish(session, exitstatus):
         "commit": commit,
         "date": datetime.now(timezone.utc).isoformat(),
         "suite": suite,
+        "model": os.environ.get("MIMO_MODEL", "mimo-v2.5"),
         "summary": {
             "total": total,
             "passed": passed,

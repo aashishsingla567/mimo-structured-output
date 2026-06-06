@@ -48,19 +48,21 @@ class ExtractionResult:
 class ExtractionConfig:
     """Tuneable knobs for the extraction pipeline."""
 
-    model: str = "mimo-v2.5"
+    model: str = os.environ.get("MIMO_MODEL", "mimo-v2.5")
     max_attempts: int = 3
     max_completion_tokens: int = 5120
     temperature: float = 0
     top_p: float = 1
-    base_url: str = "https://token-plan-sgp.xiaomimimo.com/v1"
+    base_url: str = os.environ.get(
+        "MIMO_BASE_URL", "https://token-plan-sgp.xiaomimimo.com/v1"
+    )
 
 
 def get_client(config: ExtractionConfig | None = None) -> OpenAI:
     """Create an OpenAI client from env vars."""
     cfg = config or ExtractionConfig()
     client = OpenAI(base_url=cfg.base_url, api_key=os.environ["MIMO_API_KEY"])
-    log.info("Client initialised (base_url=%s)", cfg.base_url)
+    log.info("Client initialised (base_url=%s, model=%s)", cfg.base_url, cfg.model)
     return client
 
 

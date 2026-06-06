@@ -9,6 +9,16 @@
       "input_per_1m_cache_hit": 0.0036,
       "input_per_1m_cache_miss": 0.435,
       "output_per_1m": 0.87
+    },
+    "mimo-v2-flash": {
+      "input_per_1m_cache_hit": 0.01,
+      "input_per_1m_cache_miss": 0.1,
+      "output_per_1m": 0.3
+    },
+    "mimo-v2-omni": {
+      "input_per_1m_cache_hit": 0.08,
+      "input_per_1m_cache_miss": 0.4,
+      "output_per_1m": 2.0
     }
   },
   "default_model": "mimo-v2.5",
