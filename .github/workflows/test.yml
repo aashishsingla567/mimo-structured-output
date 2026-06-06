@@ -4,20 +4,20 @@ on:
   push:
     branches: [main]
     paths:
-      - "**.py"
-      - "schemas/**"
-      - "tests/**"
+      - "extraction.py"
+      - "schemas/*.py"
+      - "tests/**/*.py"
       - "test_documents/**"
-      - "pyproject.toml"
+      - "conftest.py"
       - ".github/workflows/test.yml"
   pull_request:
     branches: [main]
     paths:
-      - "**.py"
-      - "schemas/**"
-      - "tests/**"
+      - "extraction.py"
+      - "schemas/*.py"
+      - "tests/**/*.py"
       - "test_documents/**"
-      - "pyproject.toml"
+      - "conftest.py"
       - ".github/workflows/test.yml"
 
 concurrency:
@@ -27,6 +27,8 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
