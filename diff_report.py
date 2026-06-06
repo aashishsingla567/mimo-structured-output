@@ -6,11 +6,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+from utils.env import env
+
 REPORTS_FILE = Path(__file__).parent / "reports.json"
 REPO_ROOT = Path(__file__).parent
 
 
-def get_previous_reports():
+def get_previous_reports() -> dict | None:
     """Get reports.json from the previous commit."""
     try:
         result = subprocess.run(
@@ -26,7 +28,7 @@ def get_previous_reports():
         return None
 
 
-def get_current_reports():
+def get_current_reports() -> dict | None:
     """Get current reports.json."""
     if not REPORTS_FILE.exists():
         return None
@@ -34,20 +36,22 @@ def get_current_reports():
         return json.load(f)
 
 
-def fmt_delta(curr, prev, lower_is_better=True):
+def fmt_delta(
+    curr: float | None, prev: float | None, lower_is_better: bool = True
+) -> str:
     """Format delta with arrow indicator."""
     if prev is None or curr is None:
         return "N/A"
     diff = curr - prev
     if diff == 0:
         return f"{curr} (=)"
-    arrow = "↓" if (diff < 0) == lower_is_better else "↑"
+    arrow = "\u2193" if (diff < 0) == lower_is_better else "\u2191"
     pct = (diff / prev * 100) if prev != 0 else 0
     sign = "+" if diff > 0 else ""
     return f"{curr} ({sign}{diff:.1f}, {sign}{pct:.1f}% {arrow})"
 
 
-def compare_runs(prev_run, curr_run):
+def compare_runs(prev_run: dict, curr_run: dict) -> None:
     """Compare two runs and print diff."""
     prev_s = prev_run.get("summary", {})
     curr_s = curr_run.get("summary", {})
@@ -87,7 +91,7 @@ def compare_runs(prev_run, curr_run):
         if lower_better is None:
             prev_str = str(prev) if prev is not None else "N/A"
             curr_str = str(curr) if curr is not None else "N/A"
-            delta = "=" if prev == curr else "→"
+            delta = "=" if prev == curr else "\u2192"
         else:
             prev_str = f"{prev:.1f}" if isinstance(prev, float) else str(prev)
             curr_str = f"{curr:.1f}" if isinstance(curr, float) else str(curr)
@@ -114,17 +118,17 @@ def compare_runs(prev_run, curr_run):
                 improved.append((name, pa, ca))
 
     if regressed:
-        print(f"\n⚠ Regressed (more attempts):")
+        print(f"\n\u26a0 Regressed (more attempts):")
         for name, pa, ca in regressed:
-            print(f"  {name}: {pa} → {ca}")
+            print(f"  {name}: {pa} \u2192 {ca}")
 
     if improved:
-        print(f"\n✓ Improved (fewer attempts):")
+        print(f"\n\u2713 Improved (fewer attempts):")
         for name, pa, ca in improved:
-            print(f"  {name}: {pa} → {ca}")
+            print(f"  {name}: {pa} \u2192 {ca}")
 
 
-def main():
+def main() -> None:
     prev_data = get_previous_reports()
     curr_data = get_current_reports()
 
@@ -146,9 +150,9 @@ def main():
 
     prev_run = prev_data["runs"][-1]
 
-    print(f"Comparing: {prev_run.get('id')} → {curr_run.get('id')}")
+    print(f"Comparing: {prev_run.get('id')} \u2192 {curr_run.get('id')}")
     print(
-        f"Models:    {prev_run.get('model', 'mimo-v2.5')} → {curr_run.get('model', 'mimo-v2.5')}"
+        f"Models:    {prev_run.get('model', env.MIMO_MODEL)} \u2192 {curr_run.get('model', env.MIMO_MODEL)}"
     )
     compare_runs(prev_run, curr_run)
 

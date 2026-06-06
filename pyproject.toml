@@ -1,7 +1,7 @@
 [project]
 name = "mimo-structured-output"
 version = "0.1.0"
-description = "Add your description here"
+description = "Extract structured JSON from OCR documents using LLM tool-call output"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

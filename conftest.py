@@ -1,5 +1,4 @@
 import json
-import os
 import subprocess
 from datetime import datetime, timezone
 
@@ -59,12 +58,6 @@ def pytest_addoption(parser):
         action="store",
         default=env.MIMO_MODEL,
         help=f"Model to use for extraction (default: {env.MIMO_MODEL})",
-    )
-    parser.addoption(
-        "--report",
-        action="store_true",
-        default=False,
-        help="(deprecated) Reports are now always written",
     )
 
 

@@ -2,9 +2,10 @@
 """Post-test script: commit reports.json after a test run.
 
 Usage:
-    uv run pytest --suite=full --report && python commit_report.py
+    uv run pytest --suite=full && python commit_report.py
 """
 
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -15,7 +16,7 @@ REPORTS_FILE = REPO_ROOT / "reports.json"
 
 def main():
     if not REPORTS_FILE.exists():
-        print("No reports.json found. Run tests with --report first.")
+        print("No reports.json found. Run tests first.")
         sys.exit(1)
 
     # Check if there are actual changes
@@ -36,8 +37,6 @@ def main():
             sys.exit(0)
 
     # Get last run info from reports.json
-    import json
-
     with open(REPORTS_FILE) as f:
         reports = json.load(f)
 
