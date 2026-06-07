@@ -1,8 +1,10 @@
 import json
 import subprocess
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
+from filelock import FileLock
 
 from utils import (
     REPO_ROOT,
@@ -11,6 +13,10 @@ from utils import (
     calculate_cost,
     env,
 )
+
+# Collects test results on the coordinator. Populated by pytest_runtest_logreport
+# which receives serialized reports from all xdist workers automatically.
+_test_results: dict[str, dict] = {}
 
 
 def pytest_configure(config):
@@ -51,7 +57,10 @@ def pytest_collection_modifyitems(config, items):
 
 @pytest.fixture
 def record_result(request):
-    """Fixture that tests call to record their ExtractionResult stats."""
+    """Fixture that tests call to record their ExtractionResult stats.
+
+    Stores data on user_properties so xdist can serialize it to the coordinator.
+    """
     store = {}
 
     def _record(result):
@@ -64,24 +73,56 @@ def record_result(request):
     return _record, store
 
 
+@pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
+    """Runs in each worker. Stores test info on the report for xdist serialization."""
+    outcome = yield
+    report = outcome.get_result()
     if call.when == "call":
-        item._test_result_info = {
+        info = {
             "name": item.nodeid,
-            "status": "passed" if call.excinfo is None else "failed",
-            "time_s": round(call.duration, 2),
+            "status": "passed" if report.outcome == "passed" else "failed",
+            "time_s": round(report.duration, 2),
         }
         for fixture_name, fixture_val in item.funcargs.items():
             if fixture_name == "record_result" and isinstance(fixture_val, tuple):
                 _, store = fixture_val
                 if store:
-                    item._test_result_info.update(store)
+                    info.update(store)
+        report.user_properties = [("test_result_info", info)]
+
+
+def pytest_runtest_logreport(report):
+    """Runs on the coordinator. Receives serialized reports from all workers."""
+    if report.when == "call":
+        _test_results[report.nodeid] = {
+            "name": report.nodeid,
+            "status": report.outcome,
+            "time_s": round(report.duration, 2),
+        }
+        for key, value in report.user_properties:
+            if key == "test_result_info":
+                _test_results[report.nodeid].update(value)
+                break
+
+
+def pytest_sessionstart(session):
+    session._session_start = datetime.now(UTC)
 
 
 def pytest_sessionfinish(session, exitstatus):
+    # Only the coordinator writes the report
+    try:
+        from xdist import is_xdist_worker
+
+        if is_xdist_worker(session):
+            return
+    except ImportError:
+        pass
 
     suite = session.config.getoption("--suite")
     run_id = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
+    wall_time = (datetime.now(UTC) - session._session_start).total_seconds()
 
     try:
         commit = subprocess.check_output(
@@ -100,10 +141,8 @@ def pytest_sessionfinish(session, exitstatus):
     total_cached = 0
     total_attempts = 0
 
-    for item in session.items:
-        info = getattr(item, "_test_result_info", None)
-        if info is None:
-            continue
+    # Iterate _test_results directly (coordinator has empty session.items)
+    for _nodeid, info in _test_results.items():
         total += 1
         if info["status"] == "passed":
             passed += 1
@@ -153,7 +192,8 @@ def pytest_sessionfinish(session, exitstatus):
             "passed": passed,
             "failed": failed,
             "accuracy_pct": accuracy_pct,
-            "wall_time_s": round(total_time, 2),
+            "wall_time_s": round(wall_time, 2),
+            "total_time_s": round(total_time, 2),
             "total_input_tokens": total_in,
             "total_output_tokens": total_out,
             "total_cached_tokens": total_cached,
@@ -163,9 +203,14 @@ def pytest_sessionfinish(session, exitstatus):
         "tests": tests,
     }
 
-    reports = {"runs": [run_entry]}
-
-    with open(REPORTS_FILE, "w") as f:
-        json.dump(reports, f, separators=(",", ":"))
+    lock_path = Path(str(REPORTS_FILE) + ".lock")
+    with FileLock(lock_path):
+        existing = {"runs": []}
+        if REPORTS_FILE.exists():
+            content = REPORTS_FILE.read_text().strip()
+            if content:
+                existing = json.loads(content)
+        existing["runs"].append(run_entry)
+        REPORTS_FILE.write_text(json.dumps(existing, separators=(",", ":")))
 
     print(f"\nReport written to {REPORTS_FILE} (run {run_id})")

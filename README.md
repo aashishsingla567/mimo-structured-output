@@ -104,8 +104,8 @@ mimo-structured-output/
 ## Quick Start
 
 ```bash
-# Install
-uv sync
+# Install (deps + git hooks)
+just setup
 
 # Set API key (Token Plan or Pay-as-you-go)
 cp .env.example .env  # edit with your key
@@ -114,13 +114,16 @@ cp .env.example .env  # edit with your key
 uv run main.py
 
 # Run tests
-uv run pytest --suite=sanity      # 14 hand-crafted tests
-uv run pytest --suite=real        # 13 real OCR tests
-uv run pytest --suite=full        # all 27 tests
+just test                # all 27 tests (sequential)
+just test-parallel       # all 27 tests (4 parallel workers)
+just test-sanity         # 14 hand-crafted tests only
 
-# Compare model performance
-uv run pytest --suite=full --model=mimo-v2.5
-uv run python diff_report.py      # show gains vs previous run
+# Lint and format
+just lint                # check
+just format              # auto-fix
+
+# Update pricing from official docs
+just update-pricing
 ```
 
 ## API Endpoints
@@ -152,11 +155,16 @@ Tests assert **structural correctness** — fields exist, types match, amounts a
 ### CLI flags
 
 ```bash
-uv run pytest --suite=sanity       # only sanity tests (default)
-uv run pytest --suite=real         # only real OCR tests
-uv run pytest --suite=full         # both suites
-uv run pytest --model=mimo-v2.5    # select model (default: mimo-v2.5)
-uv run pytest --model=mimo-v2-omni # compare with omni
+just test-sanity          # only sanity tests
+just test                 # full suite (sequential)
+just test-parallel        # full suite (parallel, ~80 RPM)
+just lint                 # ruff check + format check
+just format               # auto-fix lint and format
+just update-pricing       # fetch latest pricing from official docs
+
+# Raw pytest flags (for advanced usage)
+uv run pytest --suite=sanity --model=mimo-v2.5
+uv run pytest --suite=full -n 4 --dist loadscope
 ```
 
 ## reports.json

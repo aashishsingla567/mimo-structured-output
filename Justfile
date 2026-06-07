@@ -19,13 +19,17 @@ format:
 test:
     uv run pytest --suite=full
 
+# Run full test suite in parallel (4 workers, ~80 RPM, well under 100 RPM limit)
+test-parallel:
+    uv run pytest --suite=full -n 4 --dist loadscope
+
 # Run sanity tests only
 test-sanity:
     uv run pytest --suite=sanity
 
 # Clean generated files
 clean:
-    rm -rf reports.json .pytest_cache
+    rm -rf reports.json .pytest_cache .xdist_results
     find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 
 # Update pricing from official docs
