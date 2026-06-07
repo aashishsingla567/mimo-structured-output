@@ -10,7 +10,7 @@ on:
       - "test_documents/**"
       - "conftest.py"
       - "utils/**"
-      - ".github/workflows/ci.yml"
+      - ".github/workflows/test.yml"
       - "pyproject.toml"
       - "ruff.toml"
   pull_request:
@@ -22,7 +22,7 @@ on:
       - "test_documents/**"
       - "conftest.py"
       - "utils/**"
-      - ".github/workflows/ci.yml"
+      - ".github/workflows/test.yml"
       - "pyproject.toml"
       - "ruff.toml"
 
@@ -36,11 +36,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
-      - run: uv sync
-      - name: Ruff check
-        run: uv run ruff check .
-      - name: Ruff format check
-        run: uv run ruff format --check .
+      - uses: extractions/setup-just@v2
+      - run: just lint
 
   test:
     runs-on: ubuntu-latest
@@ -48,8 +45,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
-      - run: uv sync
-      - run: uv run pytest --suite=full -v
+      - uses: extractions/setup-just@v2
+      - run: just test-parallel
         env:
           MIMO_API_KEY: ${{ secrets.MIMO_API_KEY }}
           MIMO_BASE_URL: ${{ secrets.MIMO_BASE_URL }}
