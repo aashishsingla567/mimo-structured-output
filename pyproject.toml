@@ -5,6 +5,7 @@ description = "Extract structured JSON from OCR documents using LLM tool-call ou
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "httpx>=0.28.0",
     "openai>=2.41.0",
     "pydantic>=2.13.4",
     "pydantic-settings>=2.14.1",
@@ -13,7 +14,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "pre-commit>=4.6.0",
+    "prek>=0.4.0",
     "pytest>=9.0.3",
     "ruff>=0.15.16",
 ]
