@@ -16,13 +16,18 @@
       "output_per_1m": 0.3
     },
     "mimo-v2-omni": {
-      "input_per_1m_cache_hit": 0.08,
-      "input_per_1m_cache_miss": 0.4,
-      "output_per_1m": 2.0
+      "input_per_1m_cache_hit": 0.0028,
+      "input_per_1m_cache_miss": 0.14,
+      "output_per_1m": 0.28
+    },
+    "mimo-v2-pro": {
+      "input_per_1m_cache_hit": 0.0036,
+      "input_per_1m_cache_miss": 0.435,
+      "output_per_1m": 0.87
     }
   },
   "default_model": "mimo-v2.5",
   "currency": "USD",
   "source": "https://platform.xiaomimimo.com/docs/en-US/price/pay-as-you-go",
-  "effective_date": "2026-05-27"
+  "effective_date": "2026-06-07"
 }
