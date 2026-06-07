@@ -9,7 +9,7 @@ Usage:
 import json
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx
@@ -105,7 +105,7 @@ def main():
         for model, rates in fetched.items():
             current["models"][model] = rates
         current["source"] = PRICING_URL
-        current["effective_date"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        current["effective_date"] = datetime.now(UTC).strftime("%Y-%m-%d")
         with open(LOCAL_FILE, "w") as f:
             json.dump(current, f, indent=2)
             f.write("\n")
