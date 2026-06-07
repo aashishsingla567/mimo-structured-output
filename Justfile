@@ -34,4 +34,4 @@ clean:
 
 # Update pricing from official docs
 update-pricing:
-    uv run python update_pricing.py --apply
+    uv run python scripts/update_pricing.py --apply

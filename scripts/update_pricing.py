@@ -2,8 +2,8 @@
 """Fetch latest MiMo pay-as-you-go pricing from official Xiaomi docs.
 
 Usage:
-    python update_pricing.py              # show diff
-    python update_pricing.py --apply      # write to model_pricing.json
+    python scripts/update_pricing.py              # show diff
+    python scripts/update_pricing.py --apply      # write to model_pricing.json
 """
 
 import json
