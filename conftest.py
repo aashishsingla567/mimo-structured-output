@@ -166,6 +166,6 @@ def pytest_sessionfinish(session, exitstatus):
     reports = {"runs": [run_entry]}
 
     with open(REPORTS_FILE, "w") as f:
-        json.dump(reports, f, indent=2)
+        json.dump(reports, f, separators=(",", ":"))
 
     print(f"\nReport written to {REPORTS_FILE} (run {run_id})")
