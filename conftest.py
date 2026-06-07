@@ -18,6 +18,10 @@ from utils import (
 # which receives serialized reports from all xdist workers automatically.
 _test_results: dict[str, dict] = {}
 
+# Worker observability: tracks active test per worker
+_worker_status: dict[str, str] = {}  # worker_id -> test name
+_worker_start: dict[str, float] = {}  # worker_id -> start time
+
 
 def pytest_configure(config):
     model = config.getoption("--model")
@@ -95,15 +99,26 @@ def pytest_runtest_makereport(item, call):
 def pytest_runtest_logreport(report):
     """Runs on the coordinator. Receives serialized reports from all workers."""
     if report.when == "call":
+        worker_id = getattr(report, "worker_id", "?")
         _test_results[report.nodeid] = {
             "name": report.nodeid,
             "status": report.outcome,
             "time_s": round(report.duration, 2),
+            "worker_id": worker_id,
         }
         for key, value in report.user_properties:
             if key == "test_result_info":
                 _test_results[report.nodeid].update(value)
                 break
+
+        # Worker observability
+        status = "PASS" if report.outcome == "passed" else "FAIL"
+        elapsed = report.duration
+        icon = "\u2713" if status == "PASS" else "\u2717"
+        print(
+            f"  [{worker_id}] {icon} {report.nodeid.split('::')[-1]} ({elapsed:.1f}s)",
+            flush=True,
+        )
 
 
 def pytest_sessionstart(session):
@@ -212,5 +227,17 @@ def pytest_sessionfinish(session, exitstatus):
                 existing = json.loads(content)
         existing["runs"].append(run_entry)
         REPORTS_FILE.write_text(json.dumps(existing, separators=(",", ":")))
+
+    # Print per-worker summary
+    worker_tests: dict[str, list[str]] = {}
+    for info in _test_results.values():
+        wid = info.get("worker_id", "?")
+        worker_tests.setdefault(wid, []).append(info["name"].split("::")[-1])
+
+    if worker_tests and len(worker_tests) > 1:
+        print("\nWorker summary:")
+        for wid in sorted(worker_tests):
+            tests = worker_tests[wid]
+            print(f"  {wid}: {len(tests)} tests")
 
     print(f"\nReport written to {REPORTS_FILE} (run {run_id})")
